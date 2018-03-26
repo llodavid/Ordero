@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static be.llodavid.domain.order.OrderStatus.*;
 
@@ -57,8 +58,8 @@ public class Order implements RepositoryRecord {
     private void setShippingDate(LocalDate orderDate) {
         orderItems.forEach(itemGroup -> itemGroup.calculateShippingDate(orderDate));
     }
-
-    public int getOrderId() {
+    @Override
+    public int getId() {
         return orderId;
     }
 
@@ -103,5 +104,22 @@ public class Order implements RepositoryRecord {
     public int hashCode() {
 
         return Objects.hash(orderId);
+    }
+
+    @Override
+    public String toString() {
+        BigDecimal orderTotal = BigDecimal.ZERO;
+        return new StringBuilder("ORDER n° ")
+                .append(orderId)
+                .append("\n----------------\n")
+                .append(orderItems.stream()
+                        .map(itemGroup -> {
+                            return itemGroup.toString();
+                        })
+                        .collect(Collectors.joining("\n")))
+                .append("Order Total: ")
+                .append(totalAmount.toPlainString())
+                .append(" euro")
+                .toString();
     }
 }

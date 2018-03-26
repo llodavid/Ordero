@@ -17,7 +17,7 @@ public class ItemGroup {
 
     //Todo: ask Niels: should I Just create a new Item object that copies the content of old Item and use it in this class or is it more clear this way?
     public ItemGroup(Item item, int amount) {
-        this.itemId = item.getItemId();
+        this.itemId = item.getId();
         this.name = item.getName();
         this.description = item.getDescription();
         this.price = item.getPrice();

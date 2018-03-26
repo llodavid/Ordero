@@ -43,4 +43,12 @@ public class ItemController {
                 .map(item->itemMapper.itemToDTO(item))
                 .collect(Collectors.toList());
     }
+
+    @PutMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public ItemDTO updateItem ( @PathVariable int itemId, @RequestBody ItemDTO item) {
+        return itemMapper.itemToDTO(
+                itemService.updateItem(
+                        itemMapper.dtoToItem(item), itemId));
+    }
 }

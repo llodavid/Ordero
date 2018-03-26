@@ -37,6 +37,13 @@ public class ItemService {
         throw new DoubleEntryException("item", String.format("%s", item.getName()));
     }
 
+    public Item updateItem(Item item, int itemId) {
+        if (itemRepository.recordExists(itemId)) {
+            return itemRepository.updateRecord(item, itemId);
+        }
+        throw new UnknownResourceException("item", "item ID: " + itemId);
+    }
+
     public List<Item> getAllItems() {
         return itemRepository.getAllRecords();
     }

@@ -8,7 +8,7 @@ import javax.inject.Named;
 public class CustomerMapper {
     public CustomerDTO customerToDTO (Customer customer) {
         return new CustomerDTO()
-                .withCustomerId(customer.getCustomerId())
+                .withCustomerId(customer.getId())
                 .withFirstName(customer.getFirstName())
                 .withLastName(customer.getLastName())
                 .witheMail(customer.getEmail())

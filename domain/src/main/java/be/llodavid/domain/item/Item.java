@@ -34,12 +34,12 @@ public class Item implements RepositoryRecord {
             throw new IllegalArgumentException("Stock cannot be negative.");
         }
     }
-
+    @Override
     public void setId(int valueId) {
         this.itemId = valueId;
     }
-
-    public int getItemId() {
+    @Override
+    public int getId() {
         return itemId;
     }
 

@@ -85,7 +85,7 @@ public class RepositoryUnitTest {
     public void assertThatRecordExists_givenNonExistingRecord_throwsException() {
         customerRepository.addRecord(customer2);
         Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
-                .isThrownBy(()->customerRepository.assertThatRecordExists(customer1.getCustomerId()))
+                .isThrownBy(()->customerRepository.assertThatRecordExists(customer1.getId()))
                 .withMessage("The record with ID: 0 couldn't be found.");
     }
 

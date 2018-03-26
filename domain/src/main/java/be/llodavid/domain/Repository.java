@@ -1,7 +1,10 @@
 package be.llodavid.domain;
 
+import be.llodavid.domain.item.Item;
+
 import javax.inject.Named;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class Repository<E extends RepositoryRecord> {
 
@@ -54,6 +57,19 @@ public class Repository<E extends RepositoryRecord> {
         repository.put(idCounter, record);
         idCounter++;
         return record;
+    }
+
+    public E updateRecord(E record, int recordId) {
+        assertThatRecordExists(recordId);
+        record.setId(recordId); //To make sure nobody manipulates the recordId
+        repository.put(recordId, record);
+        return record;
+    }
+
+    public List<E> getRecordsForValueId(int valueId) {
+        return repository.values().stream()
+                .filter(value -> valueId == value.getId())
+                .collect(Collectors.toList());
     }
     //        return value;
     //        }

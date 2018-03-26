@@ -23,11 +23,12 @@ public class Customer implements RepositoryRecord {
         this.email = customerBuilder.email;
     }
 
+    @Override
     public void setId(int valueId) {
         this.customerId = valueId;
     }
-
-    public int getCustomerId() {
+    @Override
+    public int getId() {
         return customerId;
     }
 

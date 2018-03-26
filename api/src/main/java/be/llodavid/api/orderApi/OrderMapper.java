@@ -1,8 +1,6 @@
 package be.llodavid.api.orderApi;
 
-import be.llodavid.api.shoppingApi.ItemGroupDTO;
 import be.llodavid.api.shoppingApi.ItemGroupMapper;
-import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 
 import javax.inject.Named;
@@ -18,7 +16,7 @@ public class OrderMapper {
 
     public OrderDTO orderToDTO (Order order) {
         return new OrderDTO()
-                .withOrderId(order.getOrderId())
+                .withOrderId(order.getId())
                 .withCustomerId(order.getCustomerId())
                 .withOrderDate(order.getOrderDate())
                 .withOrderStatus(order.getOrderStatus())
