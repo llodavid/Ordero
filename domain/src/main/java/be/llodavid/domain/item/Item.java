@@ -60,16 +60,31 @@ public class Item implements RepositoryRecord {
     }
 
     public void addItemsToStock(int nrOfItems) {
+        verifyIfItemsToAddIsEqualOrGreaterThanZero(nrOfItems);
+        this.stock += nrOfItems;
+    }
+
+    private void verifyIfItemsToAddIsEqualOrGreaterThanZero(int nrOfItems) {
         if (nrOfItems <= 0) {
             throw new IllegalArgumentException("Adding extra items has to be positive.");
         }
-        this.stock += nrOfItems;
     }
 
     public void correctStock(int stock) {
         verifyStockIsPositive(stock);
         this.stock = 0;
         addItemsToStock(stock);
+    }
+    public void decreaseStock(int stock) {
+        verifyStockIsPositive(stock);
+        verifyIfSufficientStockAvailable(stock);
+        this.stock-=stock;
+    }
+
+    private void verifyIfSufficientStockAvailable(int stock) {
+        if (stock > this.stock) {
+            throw new IllegalArgumentException("Not enough stock available");
+        }
     }
 
     @Override

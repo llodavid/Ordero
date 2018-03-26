@@ -3,6 +3,7 @@ package be.llodavid.service;
 import be.llodavid.domain.item.Item;
 import be.llodavid.domain.item.ItemData;
 import be.llodavid.domain.Repository;
+import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.service.exceptions.DoubleEntryException;
 import be.llodavid.service.exceptions.UnknownResourceException;
 
@@ -46,5 +47,17 @@ public class ItemService {
 
     public List<Item> getAllItems() {
         return itemRepository.getAllRecords();
+    }
+
+    public void modifyStock(List<ItemGroup> orderItems) {
+        orderItems.stream()
+                .forEach(orderItem->modifyStock(orderItem));
+    }
+
+    private void modifyStock(ItemGroup orderItem) {
+        Item item = itemRepository.getRecordById(orderItem.getItemId());
+        item.decreaseStock(orderItem.getAmount());
+        itemRepository.updateRecord(item, item.getId());
+
     }
 }

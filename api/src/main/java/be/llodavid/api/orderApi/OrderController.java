@@ -1,5 +1,6 @@
 package be.llodavid.api.orderApi;
 
+import be.llodavid.service.ItemService;
 import be.llodavid.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -14,30 +15,21 @@ import java.util.stream.Collectors;
 public class OrderController {
     private OrderService orderService;
     private OrderMapper orderMapper;
-//    private ItemService itemService;
-//    private ShoppingService shoppingService;
-
+   // private ItemService itemService;
     @Inject
     public OrderController(OrderService orderService,
                            OrderMapper orderMapper) {
         this.orderService = orderService;
         this.orderMapper = orderMapper;
-//        this.itemService = itemService;
-//        this.shoppingService = shoppingService;
+       // this.itemService = itemService;
         orderService.injectDefaultData();
     }
-
-//    @PostMapping(consumes = "application/json", produces = "application/json")
-//    @ResponseStatus(HttpStatus.CREATED)
-//    public OrderDTO createOrderFromShoppingCart(@RequestBody int customerId) {
-//        return orderMapper.orderToDTO(orderService.createOrderFromShoppingCart(customerId));
-//    }
 
     @PostMapping(path = "/{customerId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrder(@PathVariable int customerId) {
         return orderMapper.orderToDTO(
-                orderService.finishOrderInShoppingCart(customerId));
+                orderService.createOrderFromShoppingCart(customerId));
     }
 
     @GetMapping(produces = "application/json")

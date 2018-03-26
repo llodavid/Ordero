@@ -18,6 +18,8 @@ public class OrderService {
     private ShoppingService shoppingService;
     @Inject
     private CustomerService customerService;
+    @Inject
+    private ItemService itemService;
 
     @Inject
     @Named("OrderRepo")
@@ -45,10 +47,12 @@ public class OrderService {
         throw new UnknownResourceException("order", "order ID: " + orderID);
     }
 
-    public Order finishOrderInShoppingCart(int customerId) {
+    public Order createOrderFromShoppingCart(int customerId) {
         verifyIfCustomerExists(customerId);
+        Order order = getShoppingCartContents(customerId);
+        itemService.modifyStock(order.getOrderItems());
 //        verifyIfPaymentReceived(order.getTotalAmount(), payment);
-        return orderRepository.addRecord(getOrderFromShoppingCart(customerId));
+        return orderRepository.addRecord(order);
     }
 
     private void verifyIfCustomerExists(int customerId) {
@@ -57,7 +61,7 @@ public class OrderService {
         }
     }
 
-    private Order getOrderFromShoppingCart(int customerId) {
+    private Order getShoppingCartContents(int customerId) {
         Order newOrder = shoppingService.createOrderFromShoppingCart(customerId);
         newOrder.finishOrder(LocalDate.now());
         shoppingService.clearShoppingCart(customerId);
@@ -68,22 +72,22 @@ public class OrderService {
         return orderRepository.getAllRecords();
     }
 
-    //Unnecessary, honestly the things I waste my time on....... Let's try and do it this way later on :-].
-    //    private void verifyIfPaymentReceived(BigDecimal totalAmount, BigDecimal payment) {
-    //        if (!payment.equals(totalAmount)) {
-    //            throw new PaymentNotReceivedException(payment);
-    //        }
-    //    }
-
-//    public Order createOrderFromShoppingCart(int customerId) {
-//        return orderRepository.addRecord(
-//                shoppingService.createOrderFromShoppingCart(customerId));
-//    }
-
     public String createOrderReportForCustomer(int customerId) {
         OrderReport orderReportCreator = new OrderReport(
                 customerService.getCustomer(customerId),
                 orderRepository.getRecordsForValueId(customerId));
         return orderReportCreator.createOrderReport();
+
+        //Unnecessary, honestly the things I waste my time on....... Let's try and do it this way later on :-].
+        //    private void verifyIfPaymentReceived(BigDecimal totalAmount, BigDecimal payment) {
+        //        if (!payment.equals(totalAmount)) {
+        //            throw new PaymentNotReceivedException(payment);
+        //        }
+        //    }
+
+        //    public Order createOrderFromShoppingCart(int customerId) {
+//        return orderRepository.addRecord(
+//                shoppingService.createOrderFromShoppingCart(customerId));
+//    }
     }
 }

@@ -47,7 +47,7 @@ public class OrderServiceUnitTest {
 //        when(orderRepository.addRecord(order1)).thenReturn(order1);
 //        when(shoppingService.createOrderFromShoppingCart(1)).thenReturn(order1);
 //
-//        assertThat(orderService.finishOrderInShoppingCart(1)).isEqualTo(order1);
+//        assertThat(orderService.createOrderFromShoppingCart(1)).isEqualTo(order1);
 //        verify(shoppingService, times(1)).clearShoppingCart(1);
 //        verify(order1, times(1)).finishOrder(LocalDate.now());
     }
