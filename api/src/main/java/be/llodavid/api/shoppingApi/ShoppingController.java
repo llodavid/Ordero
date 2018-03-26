@@ -43,6 +43,12 @@ public class ShoppingController {
         return orderMapper.orderToDTO(
                 shoppingService.createOrder(customerId));
     }
+    @PostMapping(path = "orders/{customerId}/{orderdid}", consumes = "application/json")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OrderDTO reOrder(@PathVariable int customerId, @PathVariable int orderId) {
+        return orderMapper.orderToDTO(
+                shoppingService.reOrder(customerId,orderId));
+    }
 
     //TODO ask niels how to best handle something like this. Is this ok? Is there a better way?
     @PostMapping(path="product/{itemId}", consumes = "application/json", produces = "application/json")

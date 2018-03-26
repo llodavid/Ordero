@@ -22,11 +22,9 @@ public class OrderReport {
     }
 
     private String createOrderReportBody() {
-        StringBuilder stringBuilder = new StringBuilder() ;
+        StringBuilder stringBuilder = new StringBuilder();
         BigDecimal allOrdersTotal = BigDecimal.ZERO;
-
-        for (Order order :
-                customerOrders) {
+        for (Order order : customerOrders) {
             stringBuilder.append(addOrderInfoToReport(order)).append("\n");
             allOrdersTotal.add(order.getTotalAmount());
         }

@@ -4,11 +4,11 @@ import be.llodavid.domain.Repository;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.ShoppingCart;
+import be.llodavid.service.exceptions.OrderoException;
 import be.llodavid.service.exceptions.UnknownResourceException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.time.LocalDate;
 import java.util.*;
 
 @Named
@@ -57,7 +57,7 @@ public class ShoppingService {
         verifyIfCustomerExists(customerId);
         Order order = viewOrderBasedOnShoppingCart(customerId);
         itemService.modifyStock(order.getOrderItems());
-//        verifyIfPaymentReceived(order.getTotalAmount(), payment);
+        clearShoppingCart(customerId);
         return orderRepository.addRecord(order);
     }
 
@@ -81,10 +81,32 @@ public class ShoppingService {
         shoppingCarts.remove(customerId);
     }
 
-    //Unnecessary, honestly the things I waste my time on....... Let's try and do it this way later on :-].
-    //    private void verifyIfPaymentReceived(BigDecimal totalAmount, BigDecimal payment) {
-    //        if (!payment.equals(totalAmount)) {
-    //            throw new PaymentNotReceivedException(payment);
-    //        }
-    //    }
+    public Order reOrder(int customerId, int orderId) {
+        Order order = retrieveCustomerOrder(customerId, orderId);
+        return orderRepository.addRecord(
+                new Order(order.getCustomerId(),order.getOrderItems()));
+    }
+
+    private Order retrieveCustomerOrder(int customerId, int orderId) {
+        validateReorder(customerId, orderId);
+        return orderRepository.getRecordById(orderId);
+    }
+
+    private void validateReorder(int customerId, int orderId) {
+        verifyIfCustomerExists(customerId);
+        verifyIfOrderExists(orderId);
+        verifyIfOrderIsOfCustomer(customerId, orderId);
+    }
+
+    private void verifyIfOrderExists(int orderId) {
+        if (!orderRepository.recordExists(orderId)) {
+            throw new UnknownResourceException("order", "order ID: " + orderId);
+        }
+    }
+
+    private void verifyIfOrderIsOfCustomer(int customerId, int orderId) {
+        if (orderId != customerId) {
+            throw new OrderoException("A customer can only re-order one of their own orders");
+        }
+    }
 }
