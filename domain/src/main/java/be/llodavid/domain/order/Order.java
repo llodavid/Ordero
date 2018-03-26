@@ -5,6 +5,7 @@ import be.llodavid.domain.RepositoryRecord;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
 import static be.llodavid.domain.order.OrderStatus.*;
 
@@ -19,8 +20,15 @@ public class Order implements RepositoryRecord {
 
     public Order(int customerId, List<ItemGroup> orderItems) {
         this.customerId = customerId;
+        verifyIfAtLeastOneItemGroup(orderItems);
         this.orderItems = orderItems;
         orderStatus = CREATED;
+    }
+
+    private void verifyIfAtLeastOneItemGroup(List<ItemGroup> orderItems) {
+        if (orderItems == null || orderItems.size()<1) {
+            throw new IllegalArgumentException("Please add at least 1 item to the order.");
+        }
     }
 
     //TODO: discuss this with Niels
@@ -81,5 +89,19 @@ public class Order implements RepositoryRecord {
     @Override
     public void setId(int valueId) {
         this.orderId = valueId;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Order order = (Order) o;
+        return orderId == order.orderId;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(orderId);
     }
 }

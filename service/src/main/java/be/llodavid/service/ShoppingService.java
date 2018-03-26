@@ -35,7 +35,7 @@ public class ShoppingService {
 
     public Order createOrderFromShoppingCart(int customerId) {
         verifyIfCustomerHasShoppingCart(customerId);
-        return shoppingCarts.get(customerId).createOrder(LocalDate.now());
+        return shoppingCarts.get(customerId).createOrder();
     }
 
     private void verifyIfCustomerHasShoppingCart(int customerId) {

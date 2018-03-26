@@ -5,9 +5,10 @@ import be.llodavid.domain.item.Item;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
-public class    ShoppingCart {
+public class ShoppingCart {
 
     private int customerId;
     private List<ItemGroup> orderItems;
@@ -21,12 +22,12 @@ public class    ShoppingCart {
         orderItems.add(itemGroup);
     }
 
-    public Order createOrder(LocalDate orderDate)  {
+    public Order createOrder()  {
         return new Order(customerId,orderItems);
     }
 
     public List<ItemGroup> getShoppingCartContent() {
-        return orderItems;
+        return Collections.unmodifiableList(orderItems);
     }
 
     public BigDecimal calculateBasketTotal() {
@@ -34,5 +35,9 @@ public class    ShoppingCart {
                 .map(itemGroup -> itemGroup.calculateItemGroupTotal())
                 .reduce(BigDecimal.ZERO,
                         (orderTotal, itemGroupTotal)-> orderTotal.add(itemGroupTotal));
+    }
+
+    public int getCustomerId() {
+        return customerId;
     }
 }
