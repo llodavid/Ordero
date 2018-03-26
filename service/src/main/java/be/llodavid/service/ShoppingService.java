@@ -83,6 +83,7 @@ public class ShoppingService {
 
     public Order reOrder(int customerId, int orderId) {
         Order order = retrieveCustomerOrder(customerId, orderId);
+        itemService.modifyStock(order.getOrderItems());
         return orderRepository.addRecord(
                 new Order(order.getCustomerId(),order.getOrderItems()));
     }
