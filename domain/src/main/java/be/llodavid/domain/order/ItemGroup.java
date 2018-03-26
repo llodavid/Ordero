@@ -14,6 +14,8 @@ public class ItemGroup {
     private BigDecimal price;
     private int amount, shippingDays;
     private LocalDate shippingDate;
+    private static final int NEXT_DAY_DELIVERY = 1;
+    private static final int NEXT_WEEK_DELIVERY = 7;
 
     //Todo: ask Niels: should I Just create a new Item object that copies the content of old Item and use it in this class or is it more clear this way?
     public ItemGroup(Item item, int amount) {
@@ -44,7 +46,7 @@ public class ItemGroup {
     }
 
     private int calculateShippingDaysBasedOnStock(int stock) {
-        return amount <= stock ? 1 : 7;
+        return amount <= stock ? NEXT_DAY_DELIVERY : NEXT_WEEK_DELIVERY;
     }
 
     public BigDecimal calculateItemGroupTotal() {
