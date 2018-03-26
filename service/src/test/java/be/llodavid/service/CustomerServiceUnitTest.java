@@ -1,6 +1,7 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.customer.Customer;
+import be.llodavid.domain.customer.CustomerData;
 import be.llodavid.domain.helperClass.Address;
 import be.llodavid.domain.Repository;
 import be.llodavid.service.exceptions.DoubleEntryException;
@@ -10,18 +11,25 @@ import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mockito;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+
+import static org.mockito.Mockito.*;
 
 public class CustomerServiceUnitTest {
 
     private Customer customer1, customer2, customer3;
     private Repository<Customer> customerRepository;
     private CustomerService customerService;
+    private CustomerData customerData;
 
     @Before
     public void setUp() {
-        customerRepository = Mockito.mock(Repository.class);
+        customerRepository = mock(Repository.class);
+        customerData = mock(CustomerData.class);
         customerService = new CustomerService(customerRepository);
+
+        //TODO: write mocks for customers (damn this unit testing is a lot of work)
         customer1 = Customer.CustomerBuilder.buildCustomer()
                 .withFirstName("David")
                 .withLastName("Van den Bergh")
@@ -61,40 +69,48 @@ public class CustomerServiceUnitTest {
     }
 
     @Test
-    public void assertThatCustomerExists_givenNonExistingCustomer_throwsException() {
-//        customerRepository.addCustomer(customer2);
-//        Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(() -> customerRepository.assertThatCustomerExists(customer1.getCustomerId())).withMessage("No such customer found.");
+    public void customerExists_givenExistingCustomer_returnTrue() {
+        when(customerRepository.recordExists(1)).thenReturn(true);
+        Assertions.assertThat(customerService.customerExists(1)).isEqualTo(true);
+    }
+
+    //TODO: ask niels how i can improve this test (not a unit test currently)
+    @Test
+    public void injectDefaultData_happyPath() {
+        when(customerData.getDefaultCustomers()).thenReturn(new ArrayList<>());
+        customerService.injectDefaultData();
+        verify(customerRepository, times(1)).injectDefaultData(new CustomerData().getDefaultCustomers());
     }
 
     @Test
     public void getCustomer_happyPath() {
-        Mockito.when(customerRepository.getRecordById(1)).thenReturn(customer1);
-        Mockito.when(customerRepository.recordExists(1)).thenReturn(true);
+        when(customerRepository.getRecordById(1)).thenReturn(customer1);
+        when(customerRepository.recordExists(1)).thenReturn(true);
         Assertions.assertThat(customerService.getCustomer(1)).isEqualTo(customer1);
     }
 
     @Test
     public void getCustomer_givenCustomerThatDoesNotExist_throwsException() {
-        Mockito.when(customerRepository.getRecordById(1)).thenReturn(customer1);
-        Mockito.when(customerRepository.recordExists(1)).thenReturn(true);
-        Assertions.assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(()->customerService.getCustomer(15)).withMessage("The customer could not be found based on the provided customer ID: 15.");
+        when(customerRepository.getRecordById(1)).thenReturn(customer1);
+        when(customerRepository.recordExists(1)).thenReturn(true);
+        Assertions.assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> customerService.getCustomer(15)).withMessage("The customer could not be found based on the provided customer ID: 15.");
     }
 
     @Test
     public void addCustomer_happyPath() {
-        Mockito.when(customerRepository.addRecord(customer1)).thenReturn(customer1);
+        when(customerRepository.addRecord(customer1)).thenReturn(customer1);
         Assertions.assertThat(customerService.addCustomer(customer1)).isEqualTo(customer1);
     }
 
     @Test
     public void addCustomer_givenCustomerThatAlreadyExists_throwsException() {
-        Mockito.when(customerRepository.recordAlreadyInRepository(customer1)).thenReturn(true);
-        Assertions.assertThatExceptionOfType(DoubleEntryException.class).isThrownBy(()->customerService.addCustomer(customer1)).withMessage("The customer David Van den Bergh is already present in the system.");
+        when(customerRepository.recordAlreadyInRepository(customer1)).thenReturn(true);
+        Assertions.assertThatExceptionOfType(DoubleEntryException.class).isThrownBy(() -> customerService.addCustomer(customer1)).withMessage("The customer David Van den Bergh is already present in the system.");
     }
 
     @Test
     public void getAllCustomers_happyPath() {
-        Mockito.when(customerRepository.getAllRecords()).thenReturn(Arrays.asList(customer1,customer2,customer3));
-        Assertions.assertThat(customerService.getAllCustomers()).isEqualTo(Arrays.asList(customer1,customer2,customer3));
+        when(customerRepository.getAllRecords()).thenReturn(Arrays.asList(customer1, customer2, customer3));
+        Assertions.assertThat(customerService.getAllCustomers()).isEqualTo(Arrays.asList(customer1, customer2, customer3));
     }
 }
