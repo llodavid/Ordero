@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.verify;
 
-public class OrderTest {
+public class OrderUnitTest {
 
     ItemGroup itemGroup1, itemGroup2;
     Order order;

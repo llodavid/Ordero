@@ -1,12 +1,13 @@
-package be.llodavid.domain.Customer;
+package be.llodavid.domain;
 
-import be.llodavid.domain.HelperClass.Address;
-import be.llodavid.domain.Repository;
+import be.llodavid.domain.customer.Customer;
+import be.llodavid.domain.customer.CustomerData;
+import be.llodavid.domain.helperClass.Address;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
-public class CustomerRepositoryUnitTest {
+public class RepositoryUnitTest {
 
     Customer customer1, customer2, customer3;
     Repository<Customer> customerRepository;
@@ -53,40 +54,45 @@ public class CustomerRepositoryUnitTest {
     }
 
     @Test
-    public void getCustomerById_happyPath() {
-        customerRepository.addValue(customer1);
-        Assertions.assertThat(customerRepository.getValueById(1)).isEqualTo(customer1);
+    public void getRecordById_happyPath() {
+        customerRepository.addRecord(customer1);
+        Assertions.assertThat(customerRepository.getRecordById(1)).isEqualTo(customer1);
     }
 
     @Test
-    public void getAllCustomers_happyPath() {
-        customerRepository.addValue(customer1);
-        customerRepository.addValue(customer2);
-        customerRepository.addValue(customer3);
-        Assertions.assertThat(customerRepository.getAllValues()).containsExactlyInAnyOrder(customer1, customer2, customer3);
+    public void getAllRecords_happyPath() {
+        customerRepository.addRecord(customer1);
+        customerRepository.addRecord(customer2);
+        customerRepository.addRecord(customer3);
+        Assertions.assertThat(customerRepository.getAllRecords())
+                .containsExactlyInAnyOrder(customer1, customer2, customer3);
     }
 
     @Test
-    public void addCustomer_happyPath() {
-        customerRepository.addValue(customer1);
-        Assertions.assertThat(customerRepository.getAllValues()).contains(customer1);
+    public void addRecord_happyPath() {
+        customerRepository.addRecord(customer1);
+        Assertions.assertThat(customerRepository.getAllRecords()).contains(customer1);
     }
     @Test
-    public void addCustomer_givenExistingCustomer_throwsException() {
-        customerRepository.addValue(customer1);
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(()->customerRepository.addValue(customer1)).withMessage("The customer already exists.");
-    }
-
-    @Test
-    public void assertThatCustomerExists_givenNonExistingCustomer_throwsException() {
-        customerRepository.addValue(customer2);
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(()->customerRepository.assertThatValueExists(customer1.getCustomerId())).withMessage("No such customer found.");
+    public void addRecord_givenExistingRecord_throwsException() {
+        customerRepository.addRecord(customer1);
+        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(()->customerRepository.addRecord(customer1))
+                .withMessage("The record already exists.");
     }
 
     @Test
-    public void injectDefaultCustomerData_HappyPath() {
-        customerRepository.injectDefaultValueData(new CustomerData().getDefaultCustomers());
-        Assertions.assertThat(customerRepository.getAllValues().size()).isGreaterThan(0);
+    public void assertThatRecordExists_givenNonExistingRecord_throwsException() {
+        customerRepository.addRecord(customer2);
+        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+                .isThrownBy(()->customerRepository.assertThatRecordExists(customer1.getCustomerId()))
+                .withMessage("The record with ID: 0 couldn't be found.");
+    }
+
+    @Test
+    public void injectDefaultRecordData_HappyPath() {
+        customerRepository.injectDefaultData(new CustomerData().getDefaultCustomers());
+        Assertions.assertThat(customerRepository.getAllRecords().size()).isGreaterThan(0);
     }
 
 

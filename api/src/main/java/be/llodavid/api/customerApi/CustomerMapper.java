@@ -1,6 +1,6 @@
-package be.llodavid.api.Customer;
+package be.llodavid.api.customerApi;
 
-import be.llodavid.domain.Customer.Customer;
+import be.llodavid.domain.customer.Customer;
 
 import javax.inject.Named;
 

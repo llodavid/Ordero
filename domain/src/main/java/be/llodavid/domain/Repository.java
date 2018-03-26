@@ -3,70 +3,69 @@ package be.llodavid.domain;
 import javax.inject.Named;
 import java.util.*;
 
-@Named
-public abstract class GenericRepository<E extends RepositoryValue> {
+public class Repository<E extends RepositoryRecord> {
 
     private Map<Integer, E> repository;
     private int idCounter = 1;
 
-    public GenericRepository() {
+    public Repository() {
         repository = new HashMap<>();
     }
 
-    public void injectDefaultValueData(List<E> defaultData)  {
+    public void injectDefaultData(List<E> defaultData)  {
         defaultData
-                .forEach(value -> addValue(value));
+                .forEach(record -> addRecord(record));
     }
 
-    public E getValueById(int valueId) {
-        assertThatValueExists(valueId);
-        return repository.get(valueId);
+    public E getRecordById(int recordId) {
+        assertThatRecordExists(recordId);
+        return repository.get(recordId);
     }
 
-    public void assertThatValueExists(int valueId) {
-        if (!valueExists(valueId)) {
-            throw new IllegalArgumentException("No such" + repository.get(0).getClass().getSimpleName() +  "found.");
+    public void assertThatRecordExists(int recordId) {
+        if (!recordExists(recordId)) {
+            throw new IllegalArgumentException("The record with ID: " + recordId + " couldn't be found.");
         }
     }
 
-    public boolean valueExists(int valueId) {
-        return repository.keySet().contains(valueId);
+    public boolean recordExists(int recordId) {
+        return repository.keySet().contains(recordId);
     }
 
-    public List<E> getAllValues() {
+    public List<E> getAllRecords() {
         return Collections.unmodifiableList(new ArrayList<>(repository.values()));
     }
 
-    public E addValue(E value) throws IllegalArgumentException {
-        if (valueAlreadyInDatabase(value)) {
-            throw new IllegalArgumentException("The value already exists.");
+    public E addRecord(E record) throws IllegalArgumentException {
+        if (recordAlreadyInRepository(record)) {
+            throw new IllegalArgumentException("The record already exists.");
         }
-        return addValueToDatabase(value);
+        return addRecordToRepository(record);
     }
 
-    public boolean valueAlreadyInDatabase(E value) {
+    public boolean recordAlreadyInRepository(E record) {
         return repository.values()
                 .stream()
-                .anyMatch(valueToCompare -> valueToCompare.equals(value));
+                .anyMatch(recordToCompare -> recordToCompare.equals(record));
     }
 
-    private E addValueToDatabase(E value) {
-        value.setId(idCounter);
-        repository.put(idCounter, value);
+    private E addRecordToRepository(E record) {
+        record.setId(idCounter);
+        repository.put(idCounter, record);
         idCounter++;
-        return value;
+        return record;
     }
     //        return value;
     //        }
     //            repository.put(valueID, value);
     //            value.setValueId(valueID);
-    //        if (assertThatValueExists(valueID)) {
+    //        if (assertThatRecordExists(valueID)) {
     //    public Value updateValue(int valueID, Value value) {
     //    //NOT A REQUIREMENT
     //    }
     //        }
     //            repository.remove(valueId);
-    //        if (assertThatValueExists(valueId)) {
+    //        if (assertThatRecordExists(valueId)) {
     //    public void removeValue(int valueId) {
 //    //NOT A REQUIREMENT
 

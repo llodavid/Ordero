@@ -1,7 +1,6 @@
-package be.llodavid.api.Customer;
+package be.llodavid.api.customerApi;
 
-import be.llodavid.domain.HelperClass.Address;
-import be.llodavid.domain.HelperClass.EmailValidation;
+import be.llodavid.domain.helperClass.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

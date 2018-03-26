@@ -1,5 +1,5 @@
 package be.llodavid.domain;
 
-public interface RepositoryValue {
-    void setId(int valueID);
+public interface RepositoryRecord {
+    void setId(int valueId);
 }

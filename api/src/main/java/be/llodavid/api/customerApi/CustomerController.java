@@ -1,4 +1,4 @@
-package be.llodavid.api.Customer;
+package be.llodavid.api.customerApi;
 
 import be.llodavid.service.CustomerService;
 import org.springframework.http.HttpStatus;

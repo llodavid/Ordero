@@ -2,8 +2,8 @@ package be.llodavid.service.exceptions;
 
 import java.math.BigDecimal;
 
-public class PaimentException extends OrderoException {
-    public PaimentException(BigDecimal amountToPay, BigDecimal amountReceived) {
-        super(String.format("The total amount for the paiement is %s, we have only received %s\nPlease pay the sol"));
+public class PaymentNotReceivedException extends OrderoException {
+    public PaymentNotReceivedException(BigDecimal amountToPay) {
+        super(String.format("We have not yet received payment for your order.\n The total amount to pay is %s euro", amountToPay.toPlainString()));
     }
 }

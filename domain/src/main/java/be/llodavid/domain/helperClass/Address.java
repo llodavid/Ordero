@@ -1,18 +1,18 @@
-package be.llodavid.domain;
+package be.llodavid.domain.helperClass;
 
 public class Address {
     private String street;
     private String housenumber;
     private String zipcode;
     private String city;
-    private String Country;
+    private String country;
 
-    public Address(AddressBuilder adressBuilder) {
-        this.street=adressBuilder.street;
-        this.housenumber=adressBuilder.housenumber;
-        this.zipcode=adressBuilder.zipcode;
-        this.city=adressBuilder.city;
-        this.Country=adressBuilder.Country;
+    private Address(AddressBuilder adressBuilder) {
+        this.street = adressBuilder.street;
+        this.housenumber = adressBuilder.housenumber;
+        this.zipcode = adressBuilder.zipcode;
+        this.city = adressBuilder.city;
+        this.country = adressBuilder.country;
     }
 
     public String getStreet() {
@@ -32,13 +32,13 @@ public class Address {
     }
 
     public String getCountry() {
-        return Country;
+        return country;
     }
 
     @Override
     public String toString() {
         final StringBuffer sb = new StringBuffer();
-        sb.append(", \n\tcity='").append(city).append('\'');
+        sb.append("\tcity='").append(city).append('\'');
         sb.append(", \n\tstreet='").append(street).append('\'');
         sb.append(", \n\thousenumber='").append(housenumber).append('\'');
         sb.append(", \n\tzipcode='").append(zipcode).append('\'');
@@ -50,16 +50,30 @@ public class Address {
         private String housenumber;
         private String zipcode;
         private String city;
-        private String Country;
+        private String country;
 
-        public AddressBuilder withCity(String city) {
-            this.city = city;
-            return this;
+        public static AddressBuilder buildAddress() {
+            return new AddressBuilder();
         }
 
-        public AddressBuilder withCountry(String Country) {
-            this.Country = Country;
-            return this;
+        public Address build() {
+            if (allFieldsSet()) {
+                addDefaultCountryIfNotSet();
+                return new Address(this);
+            } else {
+                throw new IllegalArgumentException("Please provide all the necessary arguments for the Address.");
+            }
+        }
+
+        private void addDefaultCountryIfNotSet() {
+            if (country == null) {
+                country = "Belgium";
+            }
+        }
+
+        private boolean allFieldsSet() {
+            return street != null && housenumber != null
+                    && zipcode != null && city != null;
         }
 
         public AddressBuilder withHousenumber(String housenumber) {
@@ -74,6 +88,16 @@ public class Address {
 
         public AddressBuilder withZipcode(String zipcode) {
             this.zipcode = zipcode;
+            return this;
+        }
+
+        public AddressBuilder withCity(String city) {
+            this.city = city;
+            return this;
+        }
+
+        public AddressBuilder withCountry(String country) {
+            this.country = country;
             return this;
         }
     }

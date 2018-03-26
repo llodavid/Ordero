@@ -1,6 +1,6 @@
-package be.llodavid.api.CustomerApi;
+package be.llodavid.api.itemApi;
 
-import be.llodavid.service.CustomerService;
+import be.llodavid.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,38 +9,38 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @RestController
-@RequestMapping("/customers")
-public class CustomerController {
-    private CustomerService customerService;
-    private CustomerMapper customerMapper;
+@RequestMapping("/items")
+public class ItemController {
+    private ItemService itemService;
+    private ItemMapper itemMapper;
 
     @Inject
-    public CustomerController(CustomerService customerService, CustomerMapper customerMapper) {
-        this.customerService = customerService;
-        this.customerMapper = customerMapper;
-        customerService.injectDefaultData();
+    public ItemController(ItemService itemService, ItemMapper itemMapper) {
+        this.itemService = itemService;
+        this.itemMapper = itemMapper;
+        itemService.injectDefaultData();
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public CustomerDTO createCustomer (@RequestBody CustomerDTO customer) {
-        return customerMapper.customerToDTO(
-                customerService.addCustomer(
-                        customerMapper.dtoToCustomer(customer)));
+    public ItemDTO createItem (@RequestBody ItemDTO item) {
+        return itemMapper.itemToDTO(
+                itemService.addItem(
+                        itemMapper.dtoToItem(item)));
     }
 
-    @GetMapping(path = "/{customerId}", produces = "application/json")
+    @GetMapping(path = "/{itemId}", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public CustomerDTO getCustomer(@PathVariable int customerId) {
-        return customerMapper.customerToDTO(customerService.getCustomer(customerId));
+    public ItemDTO getItem(@PathVariable int itemId) {
+        return itemMapper.itemToDTO(itemService.getItem(itemId));
     }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<CustomerDTO> getCustomers(){
-        return customerService.getAllCustomers()
+    public List<ItemDTO> getAllItems(){
+        return itemService.getAllItems()
                 .stream()
-                .map(customer->customerMapper.customerToDTO(customer))
+                .map(item->itemMapper.itemToDTO(item))
                 .collect(Collectors.toList());
     }
 }

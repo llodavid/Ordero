@@ -1,62 +1,38 @@
-package be.llodavid.api.CustomerApi;
+package be.llodavid.api.itemApi;
 
-import be.llodavid.domain.HelperClass.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.math.BigDecimal;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CustomerDTO {
-    public int customerId;
-    public String lastName;
-    public String firstName;
-    public String phonenumber;
-    public String eMail;
-    public String street;
-    public String housenumber;
-    public String zipcode;
-    public String city;
-    public String country;
+public class ItemDTO {
+    public int itemId;
+    public String name;
+    public String description;
+    public BigDecimal price;
+    public int stock;
 
-    public CustomerDTO withCustomerId(int customerId) {
-        this.customerId = customerId;
+    public ItemDTO withCustomerId(int itemId) {
+        this.itemId = itemId;
         return this;
     }
 
-    public CustomerDTO withLastName(String lastName) {
-        this.lastName = lastName;
+    public ItemDTO withName(String name) {
+        this.name = name;
+        return this;
+    }
+    public ItemDTO withDescription(String description) {
+        this.description = description;
         return this;
     }
 
-    public CustomerDTO withFirstName(String firstName) {
-        this.firstName = firstName;
+    public ItemDTO withPrice(BigDecimal price) {
+        this.price = price;
         return this;
     }
 
-    public CustomerDTO withPhonenumber(String phonenumber) {
-        this.phonenumber = phonenumber;
+    public ItemDTO withStock(int stock) {
+        this.stock = stock;
         return this;
-    }
-
-    public CustomerDTO witheMail(String eMail) {
-        this.eMail = eMail;
-        return this;
-    }
-
-    CustomerDTO withAddress(Address address) {
-        this.street = address.getStreet();
-        this.housenumber = address.getHousenumber();
-        this.zipcode = address.getZipcode();
-        this.city = address.getCity();
-        this.country = address.getCountry();
-        return this;
-    }
-
-    Address getAddress() {
-        return new Address.AddressBuilder()
-                .withStreet(street)
-                .withHousenumber(housenumber)
-                .withZipcode(zipcode)
-                .withCity(city)
-                .withCountry(country)
-                .build();
     }
 }

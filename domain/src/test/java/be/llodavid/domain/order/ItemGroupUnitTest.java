@@ -10,7 +10,7 @@ import org.mockito.Mockito;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
-public class ItemGroupTest {
+public class ItemGroupUnitTest {
     Item mockItem;
     ItemGroup itemGroup;
     @Before

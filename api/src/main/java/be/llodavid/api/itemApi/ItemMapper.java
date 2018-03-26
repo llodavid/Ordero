@@ -1,27 +1,25 @@
-package be.llodavid.api.CustomerApi;
+package be.llodavid.api.itemApi;
 
-import be.llodavid.domain.Customer.Customer;
+import be.llodavid.domain.item.Item;
 
 import javax.inject.Named;
 
 @Named
-public class CustomerMapper {
-    public CustomerDTO customerToDTO (Customer customer) {
-        return new CustomerDTO()
-                .withCustomerId(customer.getCustomerId())
-                .withFirstName(customer.getFirstName())
-                .withLastName(customer.getLastName())
-                .witheMail(customer.getEmail())
-                .withPhonenumber(customer.getPhonenumber())
-                .withAddress(customer.getAddress());
+public class ItemMapper {
+    public ItemDTO itemToDTO (Item item) {
+        return new ItemDTO()
+                .withCustomerId(item.getItemId())
+                .withName(item.getName())
+                .withDescription(item.getDescription())
+                .withPrice(item.getPrice())
+                .withStock(item.getStock());
     }
-    public Customer dtoToCustomer (CustomerDTO customerDTO) {
-        return new Customer.CustomerBuilder()
-                .withFirstName(customerDTO.firstName)
-                .withLastName(customerDTO.lastName)
-                .withPhonenumber(customerDTO.phonenumber)
-                .withAddress(customerDTO.getAddress())
-                .withEmail(customerDTO.eMail)
+    public Item dtoToItem (ItemDTO itemDTO) {
+        return new Item.ItemBuilder()
+                .withName(itemDTO.name)
+                .withDescription(itemDTO.description)
+                .withPrice(itemDTO.price)
+                .withStock(itemDTO.stock)
                 .build();
     }
 }
