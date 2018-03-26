@@ -83,5 +83,4 @@ public class OrderServiceUnitTest {
         when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2));
         assertThat(orderService.getAllOrders()).isEqualTo(Arrays.asList(order1, order2));
     }
-
 }

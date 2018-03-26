@@ -113,9 +113,7 @@ public class Order implements RepositoryRecord {
                 .append(orderId)
                 .append("\n----------------\n")
                 .append(orderItems.stream()
-                        .map(itemGroup -> {
-                            return itemGroup.toString();
-                        })
+                        .map(itemGroup ->  itemGroup.toString())
                         .collect(Collectors.joining("\n")))
                 .append("Order Total: ")
                 .append(totalAmount.toPlainString())

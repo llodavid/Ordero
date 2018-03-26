@@ -78,4 +78,14 @@ public class ItemGroup {
     public LocalDate getShippingDate() {
         return shippingDate;
     }
+
+    @Override
+    public String toString() {
+        return "ItemGroup{" +
+                "name='" + name + '\'' +
+                ", price=" + price +
+                ", amount=" + amount +
+                ", shippingDate=" + shippingDate +
+                '}';
+    }
 }
