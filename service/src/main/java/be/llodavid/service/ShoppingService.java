@@ -7,17 +7,15 @@ import be.llodavid.service.exceptions.UnknownResourceException;
 
 import javax.inject.Named;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Named
 public class ShoppingService {
     private Map<Integer, ShoppingCart> shoppingCarts;
 
+    //I use LinkedHashMap, so you always see the items in the same order.
     public ShoppingService() {
-        shoppingCarts = new HashMap<>();
+        shoppingCarts = new LinkedHashMap<>();
     }
 
     public ItemGroup addItemToCart(ItemGroup itemGroup, int customerId) {

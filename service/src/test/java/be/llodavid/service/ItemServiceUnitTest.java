@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 
-public class ItemServiceTest {
+public class ItemServiceUnitTest {
     Item item1;
     Item item2;
     private Repository<Item> itemRepository;

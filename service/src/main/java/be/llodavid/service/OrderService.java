@@ -44,7 +44,7 @@ public class OrderService {
         throw new UnknownResourceException("order", "order ID: " + orderID);
     }
 
-    public Order finishOrderInshoppingCart(int customerId) {
+    public Order finishOrderInShoppingCart(int customerId) {
         verifyIfCustomerExists(customerId);
 //        verifyIfPaymentReceived(order.getTotalAmount(), payment);
         return orderRepository.addRecord(getOrderFromShoppingCart(customerId));

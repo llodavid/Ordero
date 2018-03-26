@@ -37,7 +37,7 @@ public class OrderController {
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrder(@PathVariable int customerId) {
         return orderMapper.orderToDTO(
-                orderService.finishOrderInshoppingCart(customerId));
+                orderService.finishOrderInShoppingCart(customerId));
     }
 
     @GetMapping(produces = "application/json")
