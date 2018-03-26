@@ -1,7 +1,10 @@
 package be.llodavid.service;
 
+import be.llodavid.domain.Repository;
 import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.ItemGroup;
+import be.llodavid.domain.order.Order;
+import be.llodavid.domain.order.OrderStatus;
 import be.llodavid.domain.order.ShoppingCart;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
@@ -14,16 +17,23 @@ import static org.mockito.Mockito.*;
 
 public class ShoppingServiceUnitTest {
 
-    ShoppingService shoppingService;
-    ShoppingCart shoppingCart1;
-    ItemGroup itemGroup1, itemGroup2, itemGroup3;
+    private ShoppingService shoppingService;
+    private ShoppingCart shoppingCart1;
+    private ItemGroup itemGroup1, itemGroup2, itemGroup3;
+    private OrderService orderService;
+    private ItemService itemService;
+    private Repository<Order> orderRepository;
+
     @Before
     public void setUp() throws Exception {
         shoppingCart1 = mock(ShoppingCart.class);
         itemGroup1 = mock(ItemGroup.class);
         itemGroup2 = mock(ItemGroup.class);
         itemGroup3 = mock(ItemGroup.class);
-        shoppingService = new ShoppingService();
+        itemService = mock(ItemService.class);
+        orderService = mock(OrderService.class);
+        orderRepository = mock(Repository.class);
+        shoppingService = new ShoppingService(orderRepository);
     }
 
     //TODO: Discuss with Niels - can't unit test this because i cant' mock the Carts, only the items in that cart.

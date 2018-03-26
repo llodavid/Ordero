@@ -25,13 +25,6 @@ public class OrderController {
         orderService.injectDefaultData();
     }
 
-    @PostMapping(path = "/{customerId}", consumes = "application/json")
-    @ResponseStatus(HttpStatus.CREATED)
-    public OrderDTO createOrder(@PathVariable int customerId) {
-        return orderMapper.orderToDTO(
-                orderService.createOrderFromShoppingCart(customerId));
-    }
-
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public List<OrderDTO> getOrders(){

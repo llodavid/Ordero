@@ -15,11 +15,7 @@ import java.util.List;
 public class OrderService {
     private Repository<Order> orderRepository;
     @Inject
-    private ShoppingService shoppingService;
-    @Inject
     private CustomerService customerService;
-    @Inject
-    private ItemService itemService;
 
     @Inject
     @Named("OrderRepo")
@@ -46,28 +42,6 @@ public class OrderService {
         }
         throw new UnknownResourceException("order", "order ID: " + orderID);
     }
-
-    public Order createOrderFromShoppingCart(int customerId) {
-        verifyIfCustomerExists(customerId);
-        Order order = getShoppingCartContents(customerId);
-        itemService.modifyStock(order.getOrderItems());
-//        verifyIfPaymentReceived(order.getTotalAmount(), payment);
-        return orderRepository.addRecord(order);
-    }
-
-    private void verifyIfCustomerExists(int customerId) {
-        if (!customerService.customerExists(customerId)) {
-            throw new UnknownResourceException("customer", "customer ID: " + customerId);
-        }
-    }
-
-    private Order getShoppingCartContents(int customerId) {
-        Order newOrder = shoppingService.createOrderFromShoppingCart(customerId);
-        newOrder.finishOrder(LocalDate.now());
-        shoppingService.clearShoppingCart(customerId);
-        return newOrder;
-    }
-
     public List<Order> getAllOrders() {
         return orderRepository.getAllRecords();
     }
@@ -77,17 +51,34 @@ public class OrderService {
                 customerService.getCustomer(customerId),
                 orderRepository.getRecordsForValueId(customerId));
         return orderReportCreator.createOrderReport();
-
-        //Unnecessary, honestly the things I waste my time on....... Let's try and do it this way later on :-].
-        //    private void verifyIfPaymentReceived(BigDecimal totalAmount, BigDecimal payment) {
-        //        if (!payment.equals(totalAmount)) {
-        //            throw new PaymentNotReceivedException(payment);
-        //        }
-        //    }
-
-        //    public Order createOrderFromShoppingCart(int customerId) {
-//        return orderRepository.addRecord(
-//                shoppingService.createOrderFromShoppingCart(customerId));
-//    }
     }
+
+//    public Order createOrderFromShoppingCart(int customerId) {
+//        verifyIfCustomerExists(customerId);
+//        Order order = getShoppingCartContents(customerId);
+//        itemService.modifyStock(order.getOrderItems());
+////        verifyIfPaymentReceived(order.getTotalAmount(), payment);
+//        return orderRepository.addRecord(order);
+//    }
+//
+//    private void verifyIfCustomerExists(int customerId) {
+//        if (!customerService.customerExists(customerId)) {
+//            throw new UnknownResourceException("customer", "customer ID: " + customerId);
+//        }
+//    }
+//
+//    private Order getShoppingCartContents(int customerId) {
+//        Order newOrder = shoppingService.viewOrderBasedOnShoppingCart(customerId);
+//        newOrder.finishOrder(LocalDate.now());
+//        shoppingService.clearShoppingCart(customerId);
+//        return newOrder;
+//    }
+
+
+
+
+    //    public Order viewOrderBasedOnShoppingCart(int customerId) {
+//        return orderRepository.addRecord(
+//                shoppingService.viewOrderBasedOnShoppingCart(customerId));
+//    }
 }
