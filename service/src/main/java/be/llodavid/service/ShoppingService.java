@@ -91,8 +91,8 @@ public class ShoppingService {
 
     private List<ItemGroup> refreshItemData(Order order) {
         return order.getOrderItems().stream()
-                .map(itemGroup->
-                        itemService.createItemGroup(itemGroup.getItemId(), order.getCustomerId()))
+                .map(itemGroup->itemService.createItemGroup(
+                        itemGroup.getItemId(), order.getCustomerId()))
                 .collect(Collectors.toList());
     }
 
