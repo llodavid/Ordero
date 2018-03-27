@@ -55,8 +55,7 @@ public class ShoppingController {
     @ResponseStatus(HttpStatus.CREATED)
     public ItemGroupDTO addItemToShoppingCart(@PathVariable int itemId, @RequestBody CartItemDTO cartItemDTO) {
         return itemGroupMapper.ItemGroupToDTO(
-                shoppingService.addItemToCart(
-                        new ItemGroup(itemService.getItem(itemId), cartItemDTO.amount)
-                        , cartItemDTO.customerId));
+                shoppingService.addItemToCart(itemId, cartItemDTO.amount)
+                        , cartItemDTO.customerId);
     }
 }

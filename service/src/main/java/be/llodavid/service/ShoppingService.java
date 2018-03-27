@@ -10,6 +10,7 @@ import be.llodavid.service.exceptions.UnknownResourceException;
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Named
 public class ShoppingService {
@@ -28,8 +29,9 @@ public class ShoppingService {
         this.orderRepository = orderRepository;
     }
 
-    public ItemGroup addItemToCart(ItemGroup itemGroup, int customerId) {
+    public ItemGroup addItemToCart(int itemId, int customerId) {
         ShoppingCart shoppingCart = getCustomerShoppingCartOrCreateNew(customerId);
+        ItemGroup itemGroup = itemService.createItemGroup(itemId, customerId );
         shoppingCart.addItem(itemGroup);
         shoppingCarts.put(customerId, shoppingCart);
         return itemGroup;
@@ -84,8 +86,14 @@ public class ShoppingService {
     public Order reOrder(int customerId, int orderId) {
         Order order = retrieveCustomerOrder(customerId, orderId);
         itemService.modifyStock(order.getOrderItems());
-        return orderRepository.addRecord(
-                new Order(order.getCustomerId(),order.getOrderItems()));
+        return orderRepository.addRecord(new Order(customerId,refreshItemData(order)));
+    }
+
+    private List<ItemGroup> refreshItemData(Order order) {
+        return order.getOrderItems().stream()
+                .map(itemGroup->
+                        itemService.createItemGroup(itemGroup.getItemId(), order.getCustomerId()))
+                .collect(Collectors.toList());
     }
 
     private Order retrieveCustomerOrder(int customerId, int orderId) {

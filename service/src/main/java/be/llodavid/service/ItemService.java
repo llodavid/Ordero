@@ -49,6 +49,10 @@ public class ItemService {
         return itemRepository.getAllRecords();
     }
 
+    public ItemGroup createItemGroup(int itemId, int customerId) {
+        return new ItemGroup(getItem(itemId), customerId);
+    }
+
     public void modifyStock(List<ItemGroup> orderItems) {
         orderItems.stream()
                 .forEach(orderItem->modifyStock(orderItem));
@@ -58,6 +62,5 @@ public class ItemService {
         Item item = itemRepository.getRecordById(orderItem.getItemId());
         item.decreaseStock(orderItem.getAmount());
         itemRepository.updateRecord(item, item.getId());
-
     }
 }

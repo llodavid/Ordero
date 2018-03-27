@@ -74,9 +74,6 @@ public class OrderService {
 //        return newOrder;
 //    }
 
-
-
-
     //    public Order viewOrderBasedOnShoppingCart(int customerId) {
 //        return orderRepository.addRecord(
 //                shoppingService.viewOrderBasedOnShoppingCart(customerId));

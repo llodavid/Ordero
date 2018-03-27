@@ -20,7 +20,6 @@ public class ItemGroupUnitTest {
         Mockito.when(mockItem.getName()).thenReturn("test");
         Mockito.when(mockItem.getDescription()).thenReturn("test");
         Mockito.when(mockItem.getPrice()).thenReturn(new BigDecimal(70));
-        //TODO Mock mockItem
 //        Item = Item.ItemBuilder.buildItem()
 //                .withName("Chair with two paws")
 //                .withDescription("extra paws cost extra")
