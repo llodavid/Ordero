@@ -8,7 +8,7 @@ import javax.inject.Named;
 public class ItemMapper {
     public ItemDTO itemToDTO (Item item) {
         return new ItemDTO()
-                .withCustomerId(item.getId())
+                    .withItemId(item.getId())
                 .withName(item.getName())
                 .withDescription(item.getDescription())
                 .withPrice(item.getPrice())

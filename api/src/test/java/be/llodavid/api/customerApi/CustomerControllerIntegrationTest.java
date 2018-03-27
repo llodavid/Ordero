@@ -1,5 +1,6 @@
 package be.llodavid.api.customerApi;
 
+import be.llodavid.api.TestApplication;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.customer.Customer;
 import be.llodavid.domain.helperClass.Address;

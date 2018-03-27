@@ -12,7 +12,7 @@ public class ItemDTO {
     public BigDecimal price;
     public int stock;
 
-    public ItemDTO withCustomerId(int itemId) {
+    public ItemDTO withItemId(int itemId) {
         this.itemId = itemId;
         return this;
     }

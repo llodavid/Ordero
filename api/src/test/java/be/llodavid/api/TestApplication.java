@@ -1,4 +1,4 @@
-package be.llodavid.api.customerApi;
+package be.llodavid.api;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
