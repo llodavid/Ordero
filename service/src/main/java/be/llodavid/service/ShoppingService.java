@@ -6,6 +6,7 @@ import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.ShoppingCart;
 import be.llodavid.service.exceptions.OrderoException;
 import be.llodavid.service.exceptions.UnknownResourceException;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -16,22 +17,21 @@ import java.util.stream.Collectors;
 public class ShoppingService {
     private Map<Integer, ShoppingCart> shoppingCarts;
     private Repository<Order> orderRepository;
-    @Inject
     private CustomerService customerService;
-    @Inject
     private ItemService itemService;
 
     //I use LinkedHashMap, so you always see the items in the same order.
     @Inject
-    @Named("OrderRepo")
-    public ShoppingService(Repository<Order> orderRepository) {
+    public ShoppingService(@Qualifier("OrderRepo") Repository<Order> orderRepository, CustomerService customerService, ItemService itemService) {
         shoppingCarts = new LinkedHashMap<>();
         this.orderRepository = orderRepository;
+        this.customerService = customerService;
+        this.itemService = itemService;
     }
 
     public ItemGroup addItemToCart(int itemId, int customerId) {
         ShoppingCart shoppingCart = getCustomerShoppingCartOrCreateNew(customerId);
-        ItemGroup itemGroup = itemService.createItemGroup(itemId, customerId );
+        ItemGroup itemGroup = itemService.createItemGroup(itemId, customerId);
         shoppingCart.addItem(itemGroup);
         shoppingCarts.put(customerId, shoppingCart);
         return itemGroup;
@@ -86,12 +86,12 @@ public class ShoppingService {
     public Order reOrder(int customerId, int orderId) {
         Order order = retrieveCustomerOrder(customerId, orderId);
         itemService.modifyStock(order.getOrderItems());
-        return orderRepository.addRecord(new Order(customerId,refreshItemData(order)));
+        return orderRepository.addRecord(new Order(customerId, refreshItemData(order)));
     }
 
     private List<ItemGroup> refreshItemData(Order order) {
         return order.getOrderItems().stream()
-                .map(itemGroup->itemService.createItemGroup(
+                .map(itemGroup -> itemService.createItemGroup(
                         itemGroup.getItemId(), order.getCustomerId()))
                 .collect(Collectors.toList());
     }

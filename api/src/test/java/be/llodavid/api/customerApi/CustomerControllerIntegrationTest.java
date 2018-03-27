@@ -6,6 +6,7 @@ import be.llodavid.domain.helperClass.Address;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.context.embedded.LocalServerPort;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
@@ -14,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import javax.inject.Inject;
-import javax.inject.Named;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,7 +29,7 @@ public class CustomerControllerIntegrationTest {
     private int port;
 
     @Inject
-    @Named("CustomerRepo")
+    @Qualifier("CustomerRepo")
     Repository<Customer> customerRepository;
     @Inject
     CustomerMapper customerMapper;
