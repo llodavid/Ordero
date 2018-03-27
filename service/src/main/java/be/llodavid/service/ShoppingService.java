@@ -55,7 +55,7 @@ public class ShoppingService {
         }
     }
 
-    public Order createOrder(int customerId) {
+    public Order createOrderFromShoppingCart(int customerId) {
         verifyIfCustomerExists(customerId);
         Order order = viewOrderBasedOnShoppingCart(customerId);
         itemService.modifyStock(order.getOrderItems());
@@ -117,5 +117,9 @@ public class ShoppingService {
         if (orderId != customerId) {
             throw new OrderoException("A customer can only re-order one of their own orders");
         }
+    }
+    public ShoppingCart getShoppingCart(int customerId) {
+        verifyIfCustomerExists(customerId);
+        return shoppingCarts.get(customerId);
     }
 }

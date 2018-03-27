@@ -71,19 +71,4 @@ public class Repository<E extends RepositoryRecord> {
                 .filter(value -> valueId == value.getId())
                 .collect(Collectors.toList());
     }
-    //        return value;
-    //        }
-    //            repository.put(valueID, value);
-    //            value.setValueId(valueID);
-    //        if (assertThatRecordExists(valueID)) {
-    //    public Value updateValue(int valueID, Value value) {
-    //    //NOT A REQUIREMENT
-    //    }
-    //        }
-    //            repository.remove(valueId);
-    //        if (assertThatRecordExists(valueId)) {
-    //    public void removeValue(int valueId) {
-//    //NOT A REQUIREMENT
-
-//    }
 }

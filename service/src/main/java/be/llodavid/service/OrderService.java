@@ -18,11 +18,6 @@ public class OrderService {
 
     private CustomerService customerService;
 
-    public OrderService(Repository<Order> orderRepository) {
-        this.orderRepository = orderRepository;
-    }
-
-    //TODO:ask Niels how to fix this constructor... Cannot get it to work!
     @Inject
     public OrderService(@Qualifier("OrderRepo") Repository<Order> orderRepository, CustomerService customerService) {
         this.orderRepository = orderRepository;

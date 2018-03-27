@@ -1,6 +1,7 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
+import be.llodavid.domain.customer.Customer;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
 import be.llodavid.service.exceptions.UnknownResourceException;
@@ -25,36 +26,19 @@ public class OrderServiceUnitTest {
     private CustomerService customerService;
     private ShoppingService shoppingService;
     private OrderData orderData;
+    private Customer customer;
 
 
     @Before
     public void setUp() throws Exception {
         orderRepository = mock(Repository.class);
         orderData = mock(OrderData.class);
-        orderService = new OrderService(orderRepository);
         customerService = mock(CustomerService.class);
-        shoppingService = mock(ShoppingService.class);
+        orderService = new OrderService(orderRepository, customerService);
+        customer = mock(Customer.class);
 
         order1 = mock(Order.class);
         order2 = mock(Order.class);
-    }
-
-    //Todo: Discuss this test with Niels
-    //can't do this test until I add dependencies in constructor (or use spring boot test suite)
-    @Test
-    public void finishOrderInShoppingCart_happyPath() {
-//        when(customerService.customerExists(1)).thenReturn(true);
-//        when(orderRepository.addRecord(order1)).thenReturn(order1);
-//        when(shoppingService.viewOrderBasedOnShoppingCart(1)).thenReturn(order1);
-//
-//        assertThat(orderService.viewOrderBasedOnShoppingCart(1)).isEqualTo(order1);
-//        verify(shoppingService, times(1)).clearShoppingCart(1);
-//        verify(order1, times(1)).finishOrder(LocalDate.now());
-    }
-
-    @Test
-    public void createOrderFromShoppingCart() {
-        //can't do it without proper Constructor dependency injection
     }
 
     @Test
@@ -82,5 +66,13 @@ public class OrderServiceUnitTest {
     public void getAllOrders_happyPath() {
         when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2));
         assertThat(orderService.getAllOrders()).isEqualTo(Arrays.asList(order1, order2));
+    }
+
+    //TODO: ask niels: how to test this?
+    @Test
+    public void createOrderReportForCustomer_happyPath() {
+//        when(customerService.getCustomer(1)).thenReturn(customer);
+//        when(orderRepository.getRecordsForValueId(1)).thenReturn(Arrays.asList(order1,order2));
+//        assertThat(orderService.createOrderReportForCustomer(1)).isEqualTo("");
     }
 }

@@ -2,9 +2,7 @@ package be.llodavid.api.shoppingApi;
 
 import be.llodavid.api.orderApi.OrderDTO;
 import be.llodavid.api.orderApi.OrderMapper;
-import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.service.ItemService;
-import be.llodavid.service.OrderService;
 import be.llodavid.service.ShoppingService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -41,7 +39,7 @@ public class ShoppingController {
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrder(@PathVariable int customerId) {
         return orderMapper.orderToDTO(
-                shoppingService.createOrder(customerId));
+                shoppingService.createOrderFromShoppingCart(customerId));
     }
     @PostMapping(path = "orders/{customerId}/{orderdid}", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)

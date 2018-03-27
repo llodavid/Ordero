@@ -94,7 +94,7 @@ public class CustomerControllerIntegrationTest {
         assertThat(customerList).isNotNull();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        CustomerDTO customerDTO2 = customerList.get(3);
+        CustomerDTO customerDTO2 = customerList.get(customerList.size()-1);
         assertThat(customerDTO2.customerId).isEqualTo(4);
         assertThat(customerDTO2.firstName).isEqualTo("David");
         assertThat(customerDTO2.lastName).isEqualTo("Van den Bergh");
