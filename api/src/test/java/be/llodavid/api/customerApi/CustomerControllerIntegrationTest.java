@@ -43,11 +43,11 @@ public class CustomerControllerIntegrationTest {
     public void setUp() throws Exception {
         customer = Customer.CustomerBuilder.buildCustomer()
                 .withFirstName("David")
-                .withLastName("Van den Bergh")
+                .withLastName("From the Mountain")
                 .withEmail("david@hotmail.com")
                 .withPhonenumber("02/224 45 35")
                 .withAddress(Address.AddressBuilder.buildAddress()
-                        .withStreet("steenweg")
+                        .withStreet("BrickRoad")
                         .withHousenumber("53")
                         .withCity("Welle")
                         .withZipcode("9473")
@@ -59,13 +59,13 @@ public class CustomerControllerIntegrationTest {
 
     //TODO: discuss with Niels - first integration tests, are these OK?
     @Test
-    public void createCustomer() {
+    public void createCustomer_happyPath() {
         CustomerDTO createdCustomer = new TestRestTemplate()
                 .postForObject(String.format("http://localhost:%s/%s", port, "customers"), customerDTO, CustomerDTO.class);
 
         assertThat(createdCustomer).isNotNull();
         assertThat(createdCustomer.firstName).isEqualTo("David");
-        assertThat(createdCustomer.lastName).isEqualTo("Van den Bergh");
+        assertThat(createdCustomer.lastName).isEqualTo("From the Mountain");
         assertThat(createdCustomer.eMail).isEqualTo("david@hotmail.com");
     }
 
@@ -81,12 +81,12 @@ public class CustomerControllerIntegrationTest {
         assertThat(customerDTO2).isNotNull();
         assertThat(customerDTO2.customerId).isEqualTo(customer.getId());
         assertThat(customerDTO2.firstName).isEqualTo("David");
-        assertThat(customerDTO2.lastName).isEqualTo("Van den Bergh");
+        assertThat(customerDTO2.lastName).isEqualTo("From the Mountain");
         assertThat(customerDTO2.eMail).isEqualTo("david@hotmail.com");
     }
 
     @Test
-    public void getCustomers() {
+    public void getCustomers_happyPath() {
         ResponseEntity<CustomerDTO[]> response = new TestRestTemplate()
                 .getForEntity(String.format("http://localhost:%s/%s", port, "customers"), CustomerDTO[].class);
 
@@ -95,9 +95,9 @@ public class CustomerControllerIntegrationTest {
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         CustomerDTO customerDTO2 = customerList.get(customerList.size()-1);
-        assertThat(customerDTO2.customerId).isEqualTo(4);
+        assertThat(customerDTO2.customerId).isEqualTo(customerList.size());
         assertThat(customerDTO2.firstName).isEqualTo("David");
-        assertThat(customerDTO2.lastName).isEqualTo("Van den Bergh");
+        assertThat(customerDTO2.lastName).isEqualTo("From the Mountain");
         assertThat(customerDTO2.eMail).isEqualTo("david@hotmail.com");
     }
 }
