@@ -1,12 +1,8 @@
 package be.llodavid.api.itemApi;
 
-import be.llodavid.api.itemApi.ItemDTO;
-import be.llodavid.api.itemApi.ItemMapper;
 import be.llodavid.api.TestApplication;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.item.Item;
-import be.llodavid.domain.item.Item;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -34,12 +30,12 @@ public class ItemControllerIntegrationTest {
 
     @Inject
     @Qualifier("ItemRepo")
-    Repository<Item> itemRepository;
+    private Repository<Item> itemRepository;
     @Inject
-    ItemMapper itemMapper;
+    private ItemMapper itemMapper;
 
-    Item item, item2, item3;
-    ItemDTO itemDTO;
+    private Item item, item2, item3, item4;
+    private ItemDTO itemDTO;
 
 
     @Before
@@ -58,6 +54,12 @@ public class ItemControllerIntegrationTest {
                 .build();
         item3 = Item.ItemBuilder.buildItem()
                 .withName("Simple Chair with 3 paws")
+                .withDescription("extra paws cost extra")
+                .withPrice(new BigDecimal(70))
+                .withStock(14)
+                .build();
+        item4 = Item.ItemBuilder.buildItem()
+                .withName("Simple Chair with 4 paws")
                 .withDescription("extra paws cost extra")
                 .withPrice(new BigDecimal(70))
                 .withStock(14)
@@ -107,5 +109,18 @@ public class ItemControllerIntegrationTest {
         assertThat(itemDTO2.itemId).isEqualTo(itemList.size());
         assertThat(itemDTO2.name).isEqualTo("Simple Chair with 3 paws");
         assertThat(itemDTO2.description).isEqualTo("extra paws cost extra");
+    }
+
+    @Test
+    public void updateItem_happyPath() {
+        //itemRepository.addRecord(item);
+        itemDTO=itemMapper.itemToDTO(item4);
+        ResponseEntity<ItemDTO> response = new TestRestTemplate()
+                .postForEntity(String.format("http://localhost:%s/%s", port, "items"), itemDTO, ItemDTO.class);
+
+        assertThat(response).isNotNull();
+        assertThat(response.getBody().name).isEqualTo("Simple Chair with 4 paws");
+        assertThat(response.getBody().description).isEqualTo("extra paws cost extra");
+        assertThat(response.getBody().price).isEqualTo(new BigDecimal(70));
     }
 }

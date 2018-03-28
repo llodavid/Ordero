@@ -15,9 +15,9 @@ import static org.mockito.Mockito.when;
 
 public class ShoppingCartUnitTest {
 
-    ShoppingCart shoppingCart;
-    ItemGroup itemGroup1, itemGroup2;
-    Order order;
+    private ShoppingCart shoppingCart;
+    private ItemGroup itemGroup1, itemGroup2;
+    private Order order;
 
     @Before
     public void setUp() throws Exception {

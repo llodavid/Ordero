@@ -74,7 +74,6 @@ public class CustomerServiceUnitTest {
         Assertions.assertThat(customerService.customerExists(1)).isEqualTo(true);
     }
 
-    //TODO: ask niels how i can improve this test (not a unit test currently)
     @Test
     public void injectDefaultData_happyPath() {
         when(customerData.getDefaultCustomers()).thenReturn(new ArrayList<>());

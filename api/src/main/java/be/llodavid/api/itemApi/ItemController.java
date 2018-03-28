@@ -23,7 +23,7 @@ public class ItemController {
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
-    public ItemDTO createItem (@RequestBody ItemDTO item) {
+    public ItemDTO createItem(@RequestBody ItemDTO item) {
         return itemMapper.itemToDTO(
                 itemService.addItem(
                         itemMapper.dtoToItem(item)));
@@ -37,16 +37,16 @@ public class ItemController {
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemDTO> getAllItems(){
+    public List<ItemDTO> getAllItems() {
         return itemService.getAllItems()
                 .stream()
-                .map(item->itemMapper.itemToDTO(item))
+                .map(item -> itemMapper.itemToDTO(item))
                 .collect(Collectors.toList());
     }
 
     @PutMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDTO updateItem ( @PathVariable int itemId, @RequestBody ItemDTO item) {
+    public ItemDTO updateItem(@PathVariable int itemId, @RequestBody ItemDTO item) {
         return itemMapper.itemToDTO(
                 itemService.updateItem(
                         itemMapper.dtoToItem(item), itemId));
