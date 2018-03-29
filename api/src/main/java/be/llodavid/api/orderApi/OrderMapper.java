@@ -23,6 +23,6 @@ public class OrderMapper {
                 .withOrderItems(order.getOrderItems().stream()
                         .map(itemGroup->itemGroupMapper.ItemGroupToDTO(itemGroup))
                         .collect(Collectors.toList()))
-                .withTotalAmount(order.getTotalAmount());
+                .withTotalAmount(order.calculateOrderTotal());
     }
 }

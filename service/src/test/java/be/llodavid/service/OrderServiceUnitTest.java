@@ -68,11 +68,4 @@ public class OrderServiceUnitTest {
         assertThat(orderService.getAllOrders()).isEqualTo(Arrays.asList(order1, order2));
     }
 
-    //TODO: ask niels: how to test this?
-    @Test
-    public void createOrderReportForCustomer_happyPath() {
-//        when(customerService.getCustomer(1)).thenReturn(customer);
-//        when(orderRepository.getRecordsForValueId(1)).thenReturn(Arrays.asList(order1,order2));
-//        assertThat(orderService.createOrderReportForCustomer(1)).isEqualTo("");
-    }
 }

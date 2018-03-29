@@ -17,7 +17,6 @@ public class Order implements RepositoryRecord {
     private OrderStatus orderStatus;
     private LocalDate orderDate;
     private List<ItemGroup> orderItems;
-    private BigDecimal totalAmount;
 
     public Order(int customerId, List<ItemGroup> orderItems) {
         this.customerId = customerId;
@@ -38,7 +37,6 @@ public class Order implements RepositoryRecord {
         orderStatus = PAID;
         this.orderDate = orderDate;
         setShippingDate(orderDate);
-        calculateOrderTotal();
     }
 
     private void verifyIfOrderAlreadyPaid() {
@@ -47,8 +45,8 @@ public class Order implements RepositoryRecord {
         }
     }
 
-    private void calculateOrderTotal() {
-        totalAmount = orderItems.stream()
+    public BigDecimal calculateOrderTotal() {
+        return orderItems.stream()
                 .map(itemGroup -> itemGroup.calculateItemGroupTotal())
                 .reduce(BigDecimal.ZERO,
                         (orderTotal, itemGroupTotal) -> orderTotal.add(itemGroupTotal));
@@ -83,10 +81,6 @@ public class Order implements RepositoryRecord {
         return orderItems;
     }
 
-    public BigDecimal getTotalAmount() {
-        return totalAmount;
-    }
-
     @Override
     public void setId(int valueId) {
         this.orderId = valueId;
@@ -116,7 +110,7 @@ public class Order implements RepositoryRecord {
                         .map(itemGroup ->  itemGroup.toString())
                         .collect(Collectors.joining("\n")))
                 .append("Order Total: ")
-                .append(totalAmount.toPlainString())
+                .append(calculateOrderTotal().toPlainString())
                 .append(" euro")
                 .toString();
     }

@@ -32,7 +32,7 @@ public class OrderUnitTest {
         order = new Order(1, Arrays.asList(itemGroup1,itemGroup2));
         order.finishOrder(LocalDate.of(2018,03,26));
 
-        assertThat(order.getTotalAmount()).isEqualTo(new BigDecimal(300));
+        assertThat(order.calculateOrderTotal()).isEqualTo(new BigDecimal(300));
         assertThat(order.getOrderStatus()).isEqualTo(PAID);
 
         verify(itemGroup1, times(1)).calculateShippingDate(LocalDate.of(2018,03,26));

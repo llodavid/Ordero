@@ -3,7 +3,6 @@ package be.llodavid.service;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
-import be.llodavid.domain.order.OrderReport;
 import be.llodavid.service.exceptions.UnknownResourceException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -38,12 +37,12 @@ public class OrderService {
         return orderRepository.getAllRecords();
     }
 
-    public String createOrderReportForCustomer(int customerId) {
-        OrderReport orderReportCreator = new OrderReport(
-                customerService.getCustomer(customerId),
-                orderRepository.getRecordsForValueId(customerId));
-        return orderReportCreator.createOrderReport();
-    }
+//    public String createOrderReportForCustomer(int customerId) {
+////        OrderReport orderReportCreator = new OrderReport(
+////                customerService.getCustomer(customerId),
+////                orderRepository.getRecordsForValueId(customerId));
+////        return orderReportCreator.createOrderReport();
+//    }
 
 
 }
