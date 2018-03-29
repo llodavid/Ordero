@@ -42,19 +42,21 @@ public class ShoppingController {
         return orderMapper.orderToDTO(
                 shoppingService.createOrderFromShoppingCart(customerId));
     }
+
     @PostMapping(path = "orders/{customerId}/{orderdid}", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO reOrder(@PathVariable int customerId, @PathVariable int orderId) {
         return orderMapper.orderToDTO(
-                shoppingService.reOrder(customerId,orderId));
+                shoppingService.reOrder(customerId, orderId));
     }
 
     //TODO ask niels how to best handle something like this. Is this ok? Is there a better way?
-    @PostMapping(path="product/{itemId}", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "product/{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public ItemGroupDTO addItemToShoppingCart(@PathVariable int itemId, @RequestBody CartItemDTO cartItemDTO) {
         return itemGroupMapper.ItemGroupToDTO(
-                shoppingService.addItemToCart(new ItemGroup(
-                        itemService.getItem(itemId), cartItemDTO.amount),cartItemDTO.customerId));
+                shoppingService.addItemToCart(
+                        new ItemGroup(itemService.getItem(itemId), cartItemDTO.amount)
+                        , cartItemDTO.customerId));
     }
 }
