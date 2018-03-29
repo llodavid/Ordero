@@ -2,6 +2,7 @@ package be.llodavid.api.shoppingApi;
 
 import be.llodavid.api.orderApi.OrderDTO;
 import be.llodavid.api.orderApi.OrderMapper;
+import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.service.ItemService;
 import be.llodavid.service.ShoppingService;
 import org.springframework.http.HttpStatus;
@@ -35,7 +36,7 @@ public class ShoppingController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping(path = "/{customerId}", consumes = "application/json")
+    @PostMapping(path = "shoppingcart/{customerId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrder(@PathVariable int customerId) {
         return orderMapper.orderToDTO(
@@ -53,6 +54,7 @@ public class ShoppingController {
     @ResponseStatus(HttpStatus.CREATED)
     public ItemGroupDTO addItemToShoppingCart(@PathVariable int itemId, @RequestBody CartItemDTO cartItemDTO) {
         return itemGroupMapper.ItemGroupToDTO(
-                shoppingService.addItemToCart(itemId, cartItemDTO.amount));
+                shoppingService.addItemToCart(new ItemGroup(
+                        itemService.getItem(itemId), cartItemDTO.amount),cartItemDTO.customerId));
     }
 }

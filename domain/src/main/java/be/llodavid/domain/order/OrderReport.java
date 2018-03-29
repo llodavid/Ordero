@@ -6,7 +6,7 @@ import be.llodavid.domain.order.Order;
 import java.math.BigDecimal;
 import java.util.List;
 
-//TODO: create XML report
+//TODO: Try to create XML report
 public class OrderReport {
     Customer customer;
     List<Order> customerOrders;
@@ -21,6 +21,14 @@ public class OrderReport {
         return stringBuilder.append(createOrderReportBody()).toString();
     }
 
+    private StringBuilder addCustomerInfoToReport() {
+        return new StringBuilder("Customer: ")
+                .append(customer.getFirstName())
+                .append(" ")
+                .append(customer.getLastName())
+                .append("\n-------------------------------------\n");
+    }
+
     private String createOrderReportBody() {
         StringBuilder stringBuilder = new StringBuilder();
         BigDecimal allOrdersTotal = BigDecimal.ZERO;
@@ -28,21 +36,7 @@ public class OrderReport {
             stringBuilder.append(addOrderInfoToReport(order)).append("\n");
             allOrdersTotal.add(order.getTotalAmount());
         }
-        return createOrderReportFooter(allOrdersTotal);
-    }
-
-    private String createOrderReportFooter(BigDecimal allOrdersTotal) {
-        return new StringBuilder()
-                .append("-------------------------\nTOTAL OF ALL ORDERS: ")
-                .append(allOrdersTotal).append(" EURO").toString();
-    }
-
-    private StringBuilder addCustomerInfoToReport() {
-        return new StringBuilder("Customer: ")
-                .append(customer.getFirstName())
-                .append(" ")
-                .append(customer.getLastName())
-                .append("\n-------------------------------------\n");
+        return stringBuilder.append(createOrderReportFooter(allOrdersTotal)).toString();
     }
 
     private String addOrderInfoToReport(Order order) {
@@ -52,7 +46,13 @@ public class OrderReport {
                 .append(order.toString())
                 .append("Order Total: ")
                 .append(order.getTotalAmount().toPlainString())
-                .append(" euro").toString();
+                .append(" euro\n").toString();
+    }
+
+    private String createOrderReportFooter(BigDecimal allOrdersTotal) {
+        return new StringBuilder()
+                .append("-------------------------\nTOTAL OF ALL ORDERS: ")
+                .append(allOrdersTotal).append(" EURO").toString();
     }
 
 }

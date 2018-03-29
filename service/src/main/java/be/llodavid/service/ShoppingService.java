@@ -1,6 +1,7 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
+import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.ShoppingCart;
@@ -29,9 +30,8 @@ public class ShoppingService {
         this.itemService = itemService;
     }
 
-    public ItemGroup addItemToCart(int itemId, int customerId) {
+    public ItemGroup addItemToCart(ItemGroup itemGroup, int customerId) {
         ShoppingCart shoppingCart = getCustomerShoppingCartOrCreateNew(customerId);
-        ItemGroup itemGroup = itemService.createItemGroup(itemId, customerId);
         shoppingCart.addItem(itemGroup);
         shoppingCarts.put(customerId, shoppingCart);
         return itemGroup;
