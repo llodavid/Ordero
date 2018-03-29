@@ -4,7 +4,6 @@ import be.llodavid.domain.item.Item;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.Objects;
 
 import static java.math.BigDecimal.*;
 
@@ -90,20 +89,5 @@ public class ItemGroup {
                 ", amount=" + amount +
                 ", shippingDate=" + shippingDate +
                 '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        ItemGroup itemGroup = (ItemGroup) o;
-        return itemId == itemGroup.itemId &&
-                amount == itemGroup.amount;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return Objects.hash(itemId, amount);
     }
 }

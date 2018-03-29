@@ -81,6 +81,10 @@ public class Order implements RepositoryRecord {
         return orderItems;
     }
 
+    public void setOrderDate(LocalDate orderDate) {
+        this.orderDate = orderDate;
+    }
+
     @Override
     public void setId(int valueId) {
         this.orderId = valueId;
