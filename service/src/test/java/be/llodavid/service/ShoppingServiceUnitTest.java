@@ -41,11 +41,11 @@ public class ShoppingServiceUnitTest {
 
     @Test
     public void addItemToCart_happyPath() {
-        when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
-        when(itemService.createItemGroup(3, 1)).thenReturn(itemGroup3);
-        shoppingService.addItemToCart(1, 1);
-        shoppingService.addItemToCart(2, 2);
-        shoppingService.addItemToCart(3, 1);
+//        when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
+//        when(itemService.createItemGroup(3, 1)).thenReturn(itemGroup3);
+        shoppingService.addItemToCart(itemGroup1, 1);
+        shoppingService.addItemToCart(itemGroup2, 2);
+        shoppingService.addItemToCart(itemGroup3, 1);
         assertThat(shoppingService.getShoppingCartContent(1)).containsExactlyInAnyOrder(itemGroup1, itemGroup3);
     }
 
@@ -54,10 +54,10 @@ public class ShoppingServiceUnitTest {
     public void createOrderFromShoppingCart_givenCustomerWithShoppingCart_createsOrder() {
         when(customerService.customerExists(1)).thenReturn(true);
 
-        shoppingService.addItemToCart(1, 1);
+        shoppingService.addItemToCart(itemGroup1, 1);
         Order order = shoppingService.getShoppingCart(1).createOrder();
 
-        when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
+//        when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
         when(orderRepository.addRecord(order)).thenReturn(order);
 
         assertThat(shoppingService.createOrderFromShoppingCart(1)).isEqualTo(order);
@@ -67,7 +67,7 @@ public class ShoppingServiceUnitTest {
     @Test
     public void getShoppingCartContent_givenCustomerWithShoppingCart_returnsShoppingCart() {
         when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
-        shoppingService.addItemToCart(1, 1);
+        shoppingService.addItemToCart(itemGroup1, 1);
         assertThat(shoppingService.getShoppingCartContent(1)).containsExactly(itemGroup1);
         assertThat(shoppingService.getShoppingCartContent(1).size()).isEqualTo(1);
     }
@@ -81,7 +81,7 @@ public class ShoppingServiceUnitTest {
     @Test
     public void clearShoppingCart() {
         when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
-        shoppingService.addItemToCart(1, 1);
+        shoppingService.addItemToCart(itemGroup1, 1);
         shoppingService.clearShoppingCart(1);
         assertThat(shoppingService.getShoppingCartContent(1).size()).isEqualTo(0);
     }
@@ -92,7 +92,7 @@ public class ShoppingServiceUnitTest {
         when(customerService.customerExists(1)).thenReturn(true);
         when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
 
-        shoppingService.addItemToCart(1, 1);
+        shoppingService.addItemToCart(itemGroup1, 1);
         ShoppingCart shoppingCart = new ShoppingCart(1);
         shoppingCart.addItem(itemGroup1);
         assertThat(shoppingService.getShoppingCart(1)).isEqualTo(shoppingCart);
