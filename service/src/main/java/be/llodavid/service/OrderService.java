@@ -3,6 +3,8 @@ package be.llodavid.service;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
+import be.llodavid.domain.order.ShoppingCart;
+import be.llodavid.service.exceptions.DoubleEntryException;
 import be.llodavid.service.exceptions.UnknownResourceException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -10,17 +12,19 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Named
 public class OrderService {
     private Repository<Order> orderRepository;
-
     private CustomerService customerService;
+    private ItemService itemService;
 
     @Inject
-    public OrderService(@Qualifier("OrderRepo") Repository<Order> orderRepository, CustomerService customerService) {
+    public OrderService(@Qualifier("OrderRepo") Repository<Order> orderRepository, CustomerService customerService, ItemService itemService) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
+        this.itemService = itemService;
     }
 
     public void injectDefaultData() {
@@ -28,21 +32,29 @@ public class OrderService {
     }
 
     public Order getOrder(int orderID) throws UnknownResourceException {
-        if (orderRepository.recordExists(orderID)) {
-            return orderRepository.getRecordById(orderID);
-        }
-        throw new UnknownResourceException("order", "order ID: " + orderID);
+        verifyIfOrderExists(orderID);
+        return orderRepository.getRecordById(orderID);
     }
+
+    public void verifyIfOrderExists(int orderID) {
+        if (!orderRepository.recordExists(orderID)) {
+            throw new UnknownResourceException("order", "order ID: " + orderID);
+        }
+    }
+
     public List<Order> getAllOrders() {
         return orderRepository.getAllRecords();
     }
 
-//    public String createOrderReportForCustomer(int customerId) {
-////        OrderReport orderReportCreator = new OrderReport(
-////                customerService.getCustomer(customerId),
-////                orderRepository.getRecordsForValueId(customerId));
-////        return orderReportCreator.createOrderReport();
-//    }
+    public List<Order> getAllOrdersForCustomer(int customerId) {
+        customerService.verifyIfCustomerExists(customerId);
+        return orderRepository.getAllRecords().stream()
+                .filter(order -> order.getCustomerId() == customerId)
+                .collect(Collectors.toList());
+    }
 
-
+    public Order createOrder(ShoppingCart shoppingCart) {
+        itemService.modifyStock(shoppingCart.getShoppingCartContent());
+        return orderRepository.addRecord(shoppingCart.createOrder());
+    }
 }

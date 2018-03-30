@@ -24,10 +24,14 @@ public class CustomerService {
     }
 
     public Customer getCustomer(int customerID) throws UnknownResourceException {
-        if (customerRepository.recordExists(customerID)) {
-            return customerRepository.getRecordById(customerID);
+        verifyIfCustomerExists(customerID);
+        return customerRepository.getRecordById(customerID);
+    }
+
+    public void verifyIfCustomerExists(int customerID) {
+        if (!customerRepository.recordExists(customerID)) {
+            throw new UnknownResourceException("customer", "customer ID: " + customerID);
         }
-        throw new UnknownResourceException("customer", "customer ID: " + customerID);
     }
 
     public Customer addCustomer(Customer customer) {

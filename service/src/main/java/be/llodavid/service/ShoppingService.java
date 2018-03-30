@@ -17,15 +17,15 @@ import java.util.stream.Collectors;
 @Named
 public class ShoppingService {
     private Map<Integer, ShoppingCart> shoppingCarts;
-    private Repository<Order> orderRepository;
+    private OrderService orderService;
     private CustomerService customerService;
     private ItemService itemService;
 
     //I use LinkedHashMap, so you always see the items in the same order.
     @Inject
-    public ShoppingService(@Qualifier("OrderRepo") Repository<Order> orderRepository, CustomerService customerService, ItemService itemService) {
+    public ShoppingService(OrderService orderService, CustomerService customerService, ItemService itemService) {
         shoppingCarts = new LinkedHashMap<>();
-        this.orderRepository = orderRepository;
+        this.orderService = orderService;
         this.customerService = customerService;
         this.itemService = itemService;
     }
@@ -56,17 +56,10 @@ public class ShoppingService {
     }
 
     public Order createOrderFromShoppingCart(int customerId) {
-        verifyIfCustomerExists(customerId);
-        Order order = viewOrderBasedOnShoppingCart(customerId);
-        itemService.modifyStock(order.getOrderItems());
+        customerService.verifyIfCustomerExists(customerId);
+        Order order = orderService.createOrder(getShoppingCart(customerId));
         clearShoppingCart(customerId);
-        return orderRepository.addRecord(order);
-    }
-
-    private void verifyIfCustomerExists(int customerId) {
-        if (!customerService.customerExists(customerId)) {
-            throw new UnknownResourceException("customer", "customer ID: " + customerId);
-        }
+        return order;
     }
 
     public List<ItemGroup> getShoppingCartContent(int customerId) {
@@ -84,9 +77,10 @@ public class ShoppingService {
     }
 
     public Order reOrder(int customerId, int orderId) {
-        Order order = retrieveCustomerOrder(customerId, orderId);
-        itemService.modifyStock(order.getOrderItems());
-        return orderRepository.addRecord(new Order(customerId, refreshItemData(order)));
+        ShoppingCart shoppingCart = new ShoppingCart(customerId);
+        refreshItemData(retrieveCustomerOrder(customerId, orderId))
+                .forEach(itemGroup -> shoppingCart.addItem(itemGroup));
+        return orderService.createOrder(shoppingCart);
     }
 
     private List<ItemGroup> refreshItemData(Order order) {
@@ -98,19 +92,13 @@ public class ShoppingService {
 
     private Order retrieveCustomerOrder(int customerId, int orderId) {
         validateReorder(customerId, orderId);
-        return orderRepository.getRecordById(orderId);
+        return orderService.getOrder(orderId);
     }
 
     private void validateReorder(int customerId, int orderId) {
-        verifyIfCustomerExists(customerId);
-        verifyIfOrderExists(orderId);
+        customerService.verifyIfCustomerExists(customerId);
+        orderService.verifyIfOrderExists(orderId);
         verifyIfOrderIsOfCustomer(customerId, orderId);
-    }
-
-    private void verifyIfOrderExists(int orderId) {
-        if (!orderRepository.recordExists(orderId)) {
-            throw new UnknownResourceException("order", "order ID: " + orderId);
-        }
     }
 
     private void verifyIfOrderIsOfCustomer(int customerId, int orderId) {
@@ -118,8 +106,9 @@ public class ShoppingService {
             throw new OrderoException("A customer can only re-order one of their own orders");
         }
     }
+
     public ShoppingCart getShoppingCart(int customerId) {
-        verifyIfCustomerExists(customerId);
+        customerService.verifyIfCustomerExists(customerId);
         return shoppingCarts.get(customerId);
     }
 }

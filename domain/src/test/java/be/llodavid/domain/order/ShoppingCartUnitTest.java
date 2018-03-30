@@ -55,13 +55,13 @@ public class ShoppingCartUnitTest {
         assertThat(cartOrder.getOrderStatus()).isEqualTo(order.getOrderStatus());
     }
 
-//    @Test
-//    public void getShoppingCartContent() {
-//        shoppingCart.addItem(itemGroup1);
-//        shoppingCart.addItem(itemGroup2);
-//
-//        assertThat(shoppingCart.getShoppingCartContent()).containsExactly(itemGroup1, itemGroup2);
-//    }
+    @Test
+    public void getShoppingCartContent_happyPath() {
+        shoppingCart.addItem(itemGroup1);
+        shoppingCart.addItem(itemGroup2);
+
+        assertThat(shoppingCart.getShoppingCartContent()).containsExactly(itemGroup1, itemGroup2);
+    }
 
     @Test
     public void calculateBasketTotal_happyPath() {

@@ -14,6 +14,7 @@ public class ItemGroupMapper {
                 .withDescription(itemGroup.getDescription())
                 .withAmount(itemGroup.getAmount())
                 .withPrice(itemGroup.getPrice())
+                .withItemGroupTotal(itemGroup.calculateItemGroupTotal())
                 .withShippingDays(itemGroup.getShippingDays())
                 .withShippingDate(itemGroup.getShippingDate());
     }

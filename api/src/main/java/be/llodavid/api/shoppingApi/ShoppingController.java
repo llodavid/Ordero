@@ -43,7 +43,7 @@ public class ShoppingController {
                 shoppingService.createOrderFromShoppingCart(customerId));
     }
 
-    @PostMapping(path = "customers/{customerId}/reorder?={orderId}", consumes = "application/json")
+    @PostMapping(path = "customer/{customerId}/reorder/{orderId}", consumes = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO reOrder(@PathVariable int customerId, @PathVariable int orderId) {
         return orderMapper.orderToDTO(

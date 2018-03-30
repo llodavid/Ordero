@@ -10,7 +10,7 @@ public class ItemGroupDTO {
     public int itemId;
     public String name;
     public String description;
-    public BigDecimal price;
+    public BigDecimal price, itemGroupTotal;
     public int amount, shippingDays;
     public LocalDate shippingDate;
 
@@ -39,6 +39,10 @@ public class ItemGroupDTO {
         return this;
     }
 
+    public ItemGroupDTO withItemGroupTotal(BigDecimal itemGroupTotal) {
+        this.itemGroupTotal = itemGroupTotal;
+        return this;
+    }
     public ItemGroupDTO withShippingDays(int shippingDays) {
         this.shippingDays = shippingDays;
         return this;

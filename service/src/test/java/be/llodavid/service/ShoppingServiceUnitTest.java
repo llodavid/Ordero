@@ -36,7 +36,7 @@ public class ShoppingServiceUnitTest {
         orderService = mock(OrderService.class);
         orderRepository = mock(Repository.class);
         order = mock(Order.class);
-        shoppingService = new ShoppingService(orderRepository, customerService, itemService);
+        shoppingService = new ShoppingService(orderService, customerService, itemService);
     }
 
     @Test
@@ -53,15 +53,10 @@ public class ShoppingServiceUnitTest {
     @Test
     public void createOrderFromShoppingCart_givenCustomerWithShoppingCart_createsOrder() {
         when(customerService.customerExists(1)).thenReturn(true);
-
         shoppingService.addItemToCart(itemGroup1, 1);
-        Order order = shoppingService.getShoppingCart(1).createOrder();
-
-//        when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
-        when(orderRepository.addRecord(order)).thenReturn(order);
+        when(orderService.createOrder(shoppingService.getShoppingCart(1))).thenReturn(order);
 
         assertThat(shoppingService.createOrderFromShoppingCart(1)).isEqualTo(order);
-        verify(itemService, times(1)).modifyStock(order.getOrderItems());
     }
 
     @Test

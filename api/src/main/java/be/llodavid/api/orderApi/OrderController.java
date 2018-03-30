@@ -10,27 +10,28 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
-    @RestController
-    @RequestMapping("/orders")
+@RestController
+@RequestMapping("/orders")
 public class OrderController {
     private OrderService orderService;
     private OrderMapper orderMapper;
-   // private ItemService itemService;
+
+    // private ItemService itemService;
     @Inject
     public OrderController(OrderService orderService,
                            OrderMapper orderMapper) {
         this.orderService = orderService;
         this.orderMapper = orderMapper;
-       // this.itemService = itemService;
+        // this.itemService = itemService;
         orderService.injectDefaultData();
     }
 
     @GetMapping(produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<OrderDTO> getOrders(){
+    public List<OrderDTO> getOrders() {
         return orderService.getAllOrders()
                 .stream()
-                .map(order->orderMapper.orderToDTO(order))
+                .map(order -> orderMapper.orderToDTO(order))
                 .collect(Collectors.toList());
     }
 
@@ -40,12 +41,12 @@ public class OrderController {
         return orderMapper.orderToDTO(orderService.getOrder(orderId));
     }
 
-    private BigDecimal getAmount(String paidAmount) {
-        //TODO Test this and look for a better way
-        try {
-            return new BigDecimal(paidAmount);
-        } catch (Exception e) {
-            throw new RuntimeException("ERROR CONVERTING PAYMENT FORMAT TO BIGDECIMAL");
-        }
+    @GetMapping(path = "customer/{customerId}", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<OrderDTO> getAllOrdersForCustomer(@PathVariable int customerId) {
+        return orderService.getAllOrdersForCustomer(customerId)
+                .stream()
+                .map(order -> orderMapper.orderToDTO(order))
+                .collect(Collectors.toList());
     }
 }

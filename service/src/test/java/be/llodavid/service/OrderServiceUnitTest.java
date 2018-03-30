@@ -2,6 +2,7 @@ package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.customer.Customer;
+import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
 import be.llodavid.service.exceptions.UnknownResourceException;
@@ -19,12 +20,11 @@ import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 
 public class OrderServiceUnitTest {
-    Order order1;
-    Order order2;
+    private Order order1, order2, order3;
     private Repository<Order> orderRepository;
     private OrderService orderService;
     private CustomerService customerService;
-    private ShoppingService shoppingService;
+    private ItemService itemService;
     private OrderData orderData;
     private Customer customer;
 
@@ -34,11 +34,13 @@ public class OrderServiceUnitTest {
         orderRepository = mock(Repository.class);
         orderData = mock(OrderData.class);
         customerService = mock(CustomerService.class);
-        orderService = new OrderService(orderRepository, customerService);
+        itemService = mock(ItemService.class);
+        orderService = new OrderService(orderRepository, customerService,itemService);
         customer = mock(Customer.class);
 
         order1 = mock(Order.class);
         order2 = mock(Order.class);
+        order3= mock(Order.class);
     }
 
     @Test
@@ -68,4 +70,13 @@ public class OrderServiceUnitTest {
         assertThat(orderService.getAllOrders()).isEqualTo(Arrays.asList(order1, order2));
     }
 
+    @Test
+    public void getAllOrdersForCustomer_happyPath() {
+        when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2, order3));
+        when(order1.getCustomerId()).thenReturn(1);
+        when(order2.getCustomerId()).thenReturn(2);
+        when(order3.getCustomerId()).thenReturn(1);
+
+        assertThat(orderService.getAllOrdersForCustomer(1)).containsOnly(order1, order3);
+    }
 }
