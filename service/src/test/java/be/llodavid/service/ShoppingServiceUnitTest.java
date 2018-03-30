@@ -5,6 +5,8 @@ import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.ShoppingCart;
+import be.llodavid.service.exceptions.OrderoException;
+import be.llodavid.service.exceptions.UnknownResourceException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,7 +53,6 @@ public class ShoppingServiceUnitTest {
         assertThat(shoppingService.getShoppingCartContent(1)).containsExactlyInAnyOrder(itemGroup1, itemGroup3);
     }
 
-    //TODO: not a good unit test... improve code and test
     @Test
     public void createOrderFromShoppingCart_givenCustomerWithShoppingCart_createsOrder() {
         when(customerService.customerExists(1)).thenReturn(true);
@@ -60,6 +61,14 @@ public class ShoppingServiceUnitTest {
         when(orderService.createOrder(new Order(1,Arrays.asList(itemGroup1,itemGroup2)))).thenReturn(order);
         assertThat(shoppingService.createOrderFromShoppingCart(1)).isEqualTo(order);
     }
+
+    @Test
+    public void createOrderFromShoppingCart_givenCustomerWithoutShoppingCart_throwsException() {
+        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(
+                () ->shoppingService.createOrderFromShoppingCart(1))
+        .withMessage("The shopping cart could not be found based on the provided customerID 1.");
+    }
+
 
     @Test
     public void getShoppingCartContent_givenCustomerWithShoppingCart_returnsShoppingCart() {
@@ -106,5 +115,18 @@ public class ShoppingServiceUnitTest {
         when(orderService.createOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
 
         assertThat(shoppingService.reOrder(1,1)).isEqualTo(order);
+    }
+    @Test
+    public void reOrder_orderNotOfCustomer_throwsException() {
+        when(orderService.getOrder(1)).thenReturn(order);
+        when(order.getCustomerId()).thenReturn(2);
+        when(itemGroup1.getItemId()).thenReturn(1);
+        when(order.getOrderItems()).thenReturn(Collections.singletonList(itemGroup1));
+        when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
+        when(orderService.createOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
+
+        assertThatExceptionOfType(OrderoException.class).isThrownBy(
+                ()->shoppingService.reOrder(1,1))
+                .withMessage("A customer can only re-order one of their own orders");
     }
 }

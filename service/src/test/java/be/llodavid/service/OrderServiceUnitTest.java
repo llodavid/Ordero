@@ -3,6 +3,7 @@ package be.llodavid.service;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.customer.Customer;
 import be.llodavid.domain.item.Item;
+import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
 import be.llodavid.service.exceptions.UnknownResourceException;
@@ -21,6 +22,7 @@ import static org.mockito.Mockito.mock;
 
 public class OrderServiceUnitTest {
     private Order order1, order2, order3;
+    private ItemGroup itemGroup1, itemGroup2;
     private Repository<Order> orderRepository;
     private OrderService orderService;
     private CustomerService customerService;
@@ -37,6 +39,9 @@ public class OrderServiceUnitTest {
         itemService = mock(ItemService.class);
         orderService = new OrderService(orderRepository, customerService,itemService);
         customer = mock(Customer.class);
+        itemGroup1 = mock(ItemGroup.class);
+        itemGroup2 = mock(ItemGroup.class);
+
 
         order1 = mock(Order.class);
         order2 = mock(Order.class);
@@ -78,5 +83,14 @@ public class OrderServiceUnitTest {
         when(order3.getCustomerId()).thenReturn(1);
 
         assertThat(orderService.getAllOrdersForCustomer(1)).containsOnly(order1, order3);
+        verify(customerService, times(1)).verifyIfCustomerExists(1);
+    }
+
+    @Test
+    public void createOrder_happyPath() {
+        when(orderRepository.addRecord(order1)).thenReturn(order1);
+        when(order1.getOrderItems()).thenReturn(Arrays.asList(itemGroup1));
+        assertThat(orderService.createOrder(order1)).isEqualTo(order1);
+        verify(itemService, times(1)).modifyStock(Arrays.asList(itemGroup1));
     }
 }
