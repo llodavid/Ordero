@@ -35,10 +35,15 @@ public class CustomerService {
     }
 
     public Customer addCustomer(Customer customer) {
-        if (!customerRepository.recordAlreadyInRepository(customer)) {
-            return customerRepository.addRecord(customer);
+        verifyEntryDoesNotExistYet(customer);
+        return customerRepository.addRecord(customer);
+
+    }
+
+    private void verifyEntryDoesNotExistYet(Customer customer) {
+        if (customerRepository.recordAlreadyInRepository(customer)) {
+            throw new DoubleEntryException("customer", String.format("%s %s", customer.getFirstName(), customer.getLastName()));
         }
-        throw new DoubleEntryException("customer", String.format("%s %s", customer.getFirstName(), customer.getLastName()));
     }
 
     public List<Customer> getAllCustomers() {
