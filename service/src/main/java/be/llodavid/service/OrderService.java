@@ -3,8 +3,6 @@ package be.llodavid.service;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
-import be.llodavid.domain.order.ShoppingCart;
-import be.llodavid.service.exceptions.DoubleEntryException;
 import be.llodavid.service.exceptions.UnknownResourceException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -53,8 +51,8 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
-    public Order createOrder(ShoppingCart shoppingCart) {
-        itemService.modifyStock(shoppingCart.getShoppingCartContent());
-        return orderRepository.addRecord(shoppingCart.createOrder());
+    public Order createOrder(Order order) {
+        itemService.modifyStock(order.getOrderItems());
+        return orderRepository.addRecord(order);
     }
 }

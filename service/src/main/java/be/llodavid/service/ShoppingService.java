@@ -43,11 +43,6 @@ public class ShoppingService {
                 new ShoppingCart(customerId);
     }
 
-    public Order viewOrderBasedOnShoppingCart(int customerId) {
-        verifyIfCustomerHasShoppingCart(customerId);
-        return shoppingCarts.get(customerId).createOrder();
-    }
-
     private void verifyIfCustomerHasShoppingCart(int customerId) {
         if (shoppingCartIsEmpty(customerId)) {
             throw new UnknownResourceException("shopping cart",
@@ -57,7 +52,9 @@ public class ShoppingService {
 
     public Order createOrderFromShoppingCart(int customerId) {
         customerService.verifyIfCustomerExists(customerId);
-        Order order = orderService.createOrder(getShoppingCart(customerId));
+        verifyIfCustomerHasShoppingCart(customerId);
+        Order order = orderService.createOrder(
+                getShoppingCart(customerId).createOrder());
         clearShoppingCart(customerId);
         return order;
     }
@@ -77,10 +74,9 @@ public class ShoppingService {
     }
 
     public Order reOrder(int customerId, int orderId) {
-        ShoppingCart shoppingCart = new ShoppingCart(customerId);
-        refreshItemData(retrieveCustomerOrder(customerId, orderId))
-                .forEach(itemGroup -> shoppingCart.addItem(itemGroup));
-        return orderService.createOrder(shoppingCart);
+        return orderService.createOrder(
+                new Order(customerId,
+                        refreshItemData(retrieveCustomerOrder(customerId, orderId))));
     }
 
     private List<ItemGroup> refreshItemData(Order order) {
@@ -91,18 +87,19 @@ public class ShoppingService {
     }
 
     private Order retrieveCustomerOrder(int customerId, int orderId) {
-        validateReorder(customerId, orderId);
-        return orderService.getOrder(orderId);
+        Order oldOrder = orderService.getOrder(orderId);
+        validateReorder(customerId, oldOrder);
+        return oldOrder;
     }
 
-    private void validateReorder(int customerId, int orderId) {
+    private void validateReorder(int customerId, Order oldOrder) {
         customerService.verifyIfCustomerExists(customerId);
-        orderService.verifyIfOrderExists(orderId);
-        verifyIfOrderIsOfCustomer(customerId, orderId);
+        orderService.verifyIfOrderExists(oldOrder.getId());
+        verifyIfOrderIsOfCustomer(customerId, oldOrder.getCustomerId());
     }
 
-    private void verifyIfOrderIsOfCustomer(int customerId, int orderId) {
-        if (orderId != customerId) {
+    private void verifyIfOrderIsOfCustomer(int customerId, int orderCustomerId) {
+        if (orderCustomerId != customerId) {
             throw new OrderoException("A customer can only re-order one of their own orders");
         }
     }

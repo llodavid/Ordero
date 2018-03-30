@@ -5,11 +5,13 @@ import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.ShoppingCart;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -54,8 +56,8 @@ public class ShoppingServiceUnitTest {
     public void createOrderFromShoppingCart_givenCustomerWithShoppingCart_createsOrder() {
         when(customerService.customerExists(1)).thenReturn(true);
         shoppingService.addItemToCart(itemGroup1, 1);
-        when(orderService.createOrder(shoppingService.getShoppingCart(1))).thenReturn(order);
-
+        shoppingService.addItemToCart(itemGroup2, 1);
+        when(orderService.createOrder(new Order(1,Arrays.asList(itemGroup1,itemGroup2)))).thenReturn(order);
         assertThat(shoppingService.createOrderFromShoppingCart(1)).isEqualTo(order);
     }
 
@@ -92,5 +94,17 @@ public class ShoppingServiceUnitTest {
         shoppingCart.addItem(itemGroup1);
         assertThat(shoppingService.getShoppingCart(1)).isEqualTo(shoppingCart);
         assertThat(shoppingService.getShoppingCart(1).getShoppingCartContent()).containsExactly(itemGroup1);
+    }
+
+    @Test
+    public void reOrder_happyPath() {
+        when(orderService.getOrder(1)).thenReturn(order);
+        when(order.getCustomerId()).thenReturn(1);
+        when(itemGroup1.getItemId()).thenReturn(1);
+        when(order.getOrderItems()).thenReturn(Collections.singletonList(itemGroup1));
+        when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
+        when(orderService.createOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
+
+        assertThat(shoppingService.reOrder(1,1)).isEqualTo(order);
     }
 }
