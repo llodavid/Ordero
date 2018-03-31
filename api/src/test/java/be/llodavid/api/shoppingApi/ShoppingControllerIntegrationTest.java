@@ -60,7 +60,8 @@ public class ShoppingControllerIntegrationTest {
 
     private ItemGroupDTO itemGroupDTO1, itemGroupDTO2;
     private ItemGroup itemGroup1, itemGroup2;
-    private static boolean recordsAdded=false;
+    private static boolean recordsAdded = false;
+
     @BeforeClass
     public static void setUpBeforeClass() throws Exception {
 
@@ -68,35 +69,36 @@ public class ShoppingControllerIntegrationTest {
 
     @Before
     public void setUp() throws Exception {
-            item = Item.ItemBuilder.buildItem()
-                    .withName("Simple Chair with 1 paw")
-                    .withDescription("extra paws cost extra")
-                    .withPrice(new BigDecimal(70))
-                    .withStock(14)
-                    .build();
-            item2 = Item.ItemBuilder.buildItem()
-                    .withName("Simple Chair with 2 paws")
-                    .withDescription("extra paws cost extra")
-                    .withPrice(new BigDecimal(100))
-                    .withStock(14)
-                    .build();
-            item3 = Item.ItemBuilder.buildItem()
-                    .withName("Simple Chair with 3 paws")
-                    .withDescription("extra paws cost extra")
-                    .withPrice(new BigDecimal(130))
-                    .withStock(14)
-                    .build();
-            item4 = Item.ItemBuilder.buildItem()
-                    .withName("Simple Chair with 4 paws")
-                    .withDescription("extra paws cost extra")
-                    .withPrice(new BigDecimal(140))
-                    .withStock(14)
-                    .build();
-            recordsAdded=true;
-            itemRepository.addRecord(item);
-            itemRepository.addRecord(item2);
-            itemRepository.addRecord(item3);
-            itemRepository.addRecord(item4);
+        item = Item.ItemBuilder.buildItem()
+                .withName("Simple Chair with 1 paw")
+                .withDescription("extra paws cost extra")
+                .withPrice(new BigDecimal(70))
+                .withStock(14)
+                .build();
+        item2 = Item.ItemBuilder.buildItem()
+                .withName("Simple Chair with 2 paws")
+                .withDescription("extra paws cost extra")
+                .withPrice(new BigDecimal(100))
+                .withStock(14)
+                .build();
+        item3 = Item.ItemBuilder.buildItem()
+                .withName("Simple Chair with 3 paws")
+                .withDescription("extra paws cost extra")
+                .withPrice(new BigDecimal(130))
+                .withStock(14)
+                .build();
+        item4 = Item.ItemBuilder.buildItem()
+                .withName("Simple Chair with 4 paws")
+                .withDescription("extra paws cost extra")
+                .withPrice(new BigDecimal(140))
+                .withStock(14)
+                .build();
+        itemRepository.clear();
+
+        itemRepository.addRecord(item);
+        itemRepository.addRecord(item2);
+        itemRepository.addRecord(item3);
+        itemRepository.addRecord(item4);
 
         order1 = new Order(1,
                 Arrays.asList(new ItemGroup(item, 2),
@@ -120,7 +122,6 @@ public class ShoppingControllerIntegrationTest {
     public void tearDown() throws Exception {
         shoppingService.clearShoppingCart(1);
         shoppingService.clearShoppingCart(2);
-        itemRepository.clear();
     }
 
     @Test
@@ -173,7 +174,7 @@ public class ShoppingControllerIntegrationTest {
 
         //TODO i shouldn't have to use an ORDERDTO here, but with null, it won't work
         ResponseEntity<OrderDTO> response = new TestRestTemplate()
-                .postForEntity(String.format("http://localhost:%s/%s/%s/%s/%s", port, "customer", 1, "reorder",order1.getId()),
+                .postForEntity(String.format("http://localhost:%s/%s/%s/%s/%s", port, "customer", 1, "reorder", order1.getId()),
                         orderMapper.orderToDTO(order1), OrderDTO.class);
 
         orderDTO = response.getBody();
@@ -186,8 +187,8 @@ public class ShoppingControllerIntegrationTest {
     @Test
     public void addItemToShoppingCart() {
         CartItemDTO cartItemDTO = new CartItemDTO();
-        cartItemDTO.customerId=1;
-        cartItemDTO.amount=3;
+        cartItemDTO.itemId = 1;
+        cartItemDTO.amount = 3;
         ResponseEntity<ItemGroupDTO> response = new TestRestTemplate()
                 .postForEntity(String.format("http://localhost:%s/%s/%s", port, "product", 1), cartItemDTO, ItemGroupDTO.class);
 

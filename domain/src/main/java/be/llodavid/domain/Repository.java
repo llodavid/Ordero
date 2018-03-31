@@ -73,5 +73,6 @@ public class Repository<E extends RepositoryRecord> {
     }
     public void clear(){
         repository.clear();
+        idCounter=0;
     }
 }
