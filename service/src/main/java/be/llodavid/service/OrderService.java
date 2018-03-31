@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -53,6 +54,7 @@ public class OrderService {
 
     public Order createOrder(Order order) {
         itemService.modifyStock(order.getOrderItems());
+        order.finishOrder(LocalDate.now());
         return orderRepository.addRecord(order);
     }
 }

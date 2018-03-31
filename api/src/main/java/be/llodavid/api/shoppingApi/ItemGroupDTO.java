@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ItemGroupDTO {
@@ -12,7 +13,7 @@ public class ItemGroupDTO {
     public String description;
     public BigDecimal price, itemGroupTotal;
     public int amount, shippingDays;
-    public LocalDate shippingDate;
+    public String shippingDate;
 
     public ItemGroupDTO withItemId(int itemId) {
         this.itemId = itemId;
@@ -48,8 +49,27 @@ public class ItemGroupDTO {
         return this;
     }
 
-    public ItemGroupDTO withShippingDate(LocalDate shippingDate) {
+    public ItemGroupDTO withShippingDate(String shippingDate) {
         this.shippingDate = shippingDate;
         return this;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        ItemGroupDTO that = (ItemGroupDTO) o;
+        return itemId == that.itemId &&
+                amount == that.amount &&
+                shippingDays == that.shippingDays &&
+                Objects.equals(price, that.price) &&
+                Objects.equals(itemGroupTotal, that.itemGroupTotal) &&
+                Objects.equals(shippingDate, that.shippingDate);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(itemId, price, itemGroupTotal, amount, shippingDays, shippingDate);
     }
 }

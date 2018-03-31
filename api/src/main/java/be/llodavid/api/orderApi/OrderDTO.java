@@ -3,16 +3,21 @@ package be.llodavid.api.orderApi;
 import be.llodavid.api.shoppingApi.ItemGroupDTO;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.OrderStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Objects;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDTO {
     public int orderId;
     public int customerId;
     public OrderStatus orderStatus;
-    public LocalDate orderDate;
+    @JsonFormat(pattern = "dd::MM::yyyy")
+    public String orderDate;
     public List<ItemGroupDTO> orderItems;
     public BigDecimal totalAmount;
 
@@ -31,7 +36,7 @@ public class OrderDTO {
         return this;
     }
 
-    public OrderDTO withOrderDate(LocalDate orderDate) {
+    public OrderDTO withOrderDate(String orderDate) {
         this.orderDate = orderDate;
         return this;
     }
@@ -45,5 +50,24 @@ public class OrderDTO {
         this.totalAmount = totalAmount;
         return this;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrderDTO orderDTO = (OrderDTO) o;
+        return customerId == orderDTO.customerId &&
+                orderStatus == orderDTO.orderStatus &&
+                Objects.equals(orderDate, orderDTO.orderDate) &&
+                Objects.equals(orderItems, orderDTO.orderItems) &&
+                Objects.equals(totalAmount, orderDTO.totalAmount);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(customerId, orderStatus, orderDate, orderItems, totalAmount);
+    }
+
 
 }
