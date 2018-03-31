@@ -111,7 +111,7 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
-    public void getOrder() {
+    public void getOrder_happyPath() {
         ResponseEntity<OrderDTO> response = new TestRestTemplate()
                 .getForEntity(String.format("http://localhost:%s/%s/%s", port, "orders",order1.getId()), OrderDTO.class);
 
@@ -123,7 +123,7 @@ public class OrderControllerIntegrationTest {
     }
 
     @Test
-    public void getAllOrdersForCustomer() {
+    public void getAllOrdersForCustomer_happyPath() {
         ResponseEntity<OrderDTO[]> response = new TestRestTemplate()
                 .getForEntity(String.format("http://localhost:%s/%s/%s", port, "orders/customer",1), OrderDTO[].class);
 

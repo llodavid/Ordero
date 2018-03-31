@@ -71,4 +71,7 @@ public class Repository<E extends RepositoryRecord> {
                 .filter(value -> valueId == value.getId())
                 .collect(Collectors.toList());
     }
+    public void clear(){
+        repository.clear();
+    }
 }

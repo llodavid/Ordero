@@ -49,8 +49,8 @@ public class ItemService {
         return itemRepository.getAllRecords();
     }
 
-    public ItemGroup createItemGroup(int itemId, int customerId) {
-        return new ItemGroup(getItem(itemId), customerId);
+    public ItemGroup createItemGroup(int itemId, int amount) {
+        return new ItemGroup(getItem(itemId), amount);
     }
 
     public void modifyStock(List<ItemGroup> orderItems) {

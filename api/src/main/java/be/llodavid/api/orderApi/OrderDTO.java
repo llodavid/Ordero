@@ -16,7 +16,7 @@ public class OrderDTO {
     public int orderId;
     public int customerId;
     public OrderStatus orderStatus;
-    @JsonFormat(pattern = "dd::MM::yyyy")
+    //@JsonFormat(pattern = "dd::MM::yyyy")
     public String orderDate;
     public List<ItemGroupDTO> orderItems;
     public BigDecimal totalAmount;

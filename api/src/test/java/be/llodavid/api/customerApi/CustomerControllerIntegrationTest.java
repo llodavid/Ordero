@@ -31,12 +31,12 @@ public class CustomerControllerIntegrationTest {
 
     @Inject
     @Qualifier("CustomerRepo")
-    Repository<Customer> customerRepository;
+    private Repository<Customer> customerRepository;
     @Inject
-    CustomerMapper customerMapper;
+    private CustomerMapper customerMapper;
 
-    Customer customer;
-    CustomerDTO customerDTO;
+    private Customer customer;
+    private CustomerDTO customerDTO;
 //    @Inject
 //    CustomerService customerService;
 

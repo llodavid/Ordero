@@ -30,7 +30,7 @@ public class ShoppingService {
         this.itemService = itemService;
     }
 
-    public ItemGroup addItemToCart(ItemGroup itemGroup, int customerId) {
+    public ItemGroup addItemToShoppingCart(ItemGroup itemGroup, int customerId) {
         ShoppingCart shoppingCart = getCustomerShoppingCartOrCreateNew(customerId);
         shoppingCart.addItem(itemGroup);
         shoppingCarts.put(customerId, shoppingCart);
@@ -82,7 +82,7 @@ public class ShoppingService {
     private List<ItemGroup> refreshItemData(Order order) {
         return order.getOrderItems().stream()
                 .map(itemGroup -> itemService.createItemGroup(
-                        itemGroup.getItemId(), order.getCustomerId()))
+                        itemGroup.getItemId(), itemGroup.getAmount()))
                 .collect(Collectors.toList());
     }
 

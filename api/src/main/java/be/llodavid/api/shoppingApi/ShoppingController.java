@@ -36,7 +36,7 @@ public class ShoppingController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping(path = "shoppingcart/{customerId}", consumes = "application/json")
+    @PostMapping(path = "shoppingcart/{customerId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrder(@PathVariable int customerId) {
         return orderMapper.orderToDTO(
@@ -54,7 +54,7 @@ public class ShoppingController {
     @ResponseStatus(HttpStatus.CREATED)
     public ItemGroupDTO addItemToShoppingCart(@PathVariable int itemId, @RequestBody CartItemDTO cartItemDTO) {
         return itemGroupMapper.ItemGroupToDTO(
-                shoppingService.addItemToCart(
+                shoppingService.addItemToShoppingCart(
                         new ItemGroup(itemService.getItem(itemId), cartItemDTO.amount)
                         , cartItemDTO.customerId));
     }
