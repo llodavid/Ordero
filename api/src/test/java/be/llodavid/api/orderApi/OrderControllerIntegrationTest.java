@@ -112,9 +112,29 @@ public class OrderControllerIntegrationTest {
 
     @Test
     public void getOrder() {
+        ResponseEntity<OrderDTO> response = new TestRestTemplate()
+                .getForEntity(String.format("http://localhost:%s/%s/%s", port, "orders",order1.getId()), OrderDTO.class);
+
+        orderDTO = response.getBody();
+        assertThat(orderDTO).isNotNull();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(orderDTO).isEqualTo(orderMapper.orderToDTO(order1));
     }
 
     @Test
     public void getAllOrdersForCustomer() {
+        ResponseEntity<OrderDTO[]> response = new TestRestTemplate()
+                .getForEntity(String.format("http://localhost:%s/%s/%s", port, "orders/customer",1), OrderDTO[].class);
+
+        List<OrderDTO> orderDTOS = Arrays.asList(response.getBody());
+        assertThat(orderDTOS).isNotNull();
+
+        assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
+        assertThat(orderDTOS).contains(
+                orderMapper.orderToDTO(order1),
+                orderMapper.orderToDTO(order2));
+        assertThat(orderDTOS).doesNotContain(
+                orderMapper.orderToDTO(order3));
     }
 }
