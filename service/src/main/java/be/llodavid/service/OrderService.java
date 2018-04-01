@@ -2,7 +2,6 @@ package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
@@ -15,7 +14,6 @@ import javax.inject.Named;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -62,13 +60,13 @@ public class OrderService {
 
     public Map<Customer, List<ItemGroup>> viewOrderItemsShippingToday() {
         return orderRepository.getAllRecords().stream()
-                .filter(order-> isAnyItemGroupShippingToday(order))
+                .filter(order-> isOneOfTheItemGroupsShippingToday(order))
                 .collect(Collectors.toMap(
                         order -> getCustomer(order),
                         order -> itemsShippingToday(order)));
     }
 
-    private boolean isAnyItemGroupShippingToday(Order order) {
+    private boolean isOneOfTheItemGroupsShippingToday(Order order) {
         return order.getOrderItems().stream()
                 .anyMatch(itemGroupShippingToday());
     }
