@@ -72,7 +72,6 @@ public class CustomerControllerIntegrationTest {
 
     @Test
     public void getCustomer_happyPath() {
-
         ResponseEntity<CustomerDTO> response = new TestRestTemplate()
                 .getForEntity(String.format("http://localhost:%s/%s/%s", port, "customers",customer.getId()), CustomerDTO.class);
 

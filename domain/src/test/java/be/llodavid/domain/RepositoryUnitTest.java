@@ -7,10 +7,12 @@ import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
 
+import static org.assertj.core.api.Assertions.*;
+
 public class RepositoryUnitTest {
 
-    Customer customer1, customer2, customer3;
-    Repository<Customer> customerRepository;
+    private Customer customer1, customer2, customer3;
+    private Repository<Customer> customerRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -56,7 +58,7 @@ public class RepositoryUnitTest {
     @Test
     public void getRecordById_happyPath() {
         customerRepository.addRecord(customer1);
-        Assertions.assertThat(customerRepository.getRecordById(1)).isEqualTo(customer1);
+        assertThat(customerRepository.getRecordById(1)).isEqualTo(customer1);
     }
 
     @Test
@@ -64,19 +66,19 @@ public class RepositoryUnitTest {
         customerRepository.addRecord(customer1);
         customerRepository.addRecord(customer2);
         customerRepository.addRecord(customer3);
-        Assertions.assertThat(customerRepository.getAllRecords())
+        assertThat(customerRepository.getAllRecords())
                 .containsExactlyInAnyOrder(customer1, customer2, customer3);
     }
 
     @Test
     public void addRecord_happyPath() {
         customerRepository.addRecord(customer1);
-        Assertions.assertThat(customerRepository.getAllRecords()).contains(customer1);
+        assertThat(customerRepository.getAllRecords()).contains(customer1);
     }
     @Test
     public void addRecord_givenExistingRecord_throwsException() {
         customerRepository.addRecord(customer1);
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(()->customerRepository.addRecord(customer1))
                 .withMessage("The record already exists.");
     }
@@ -84,16 +86,30 @@ public class RepositoryUnitTest {
     @Test
     public void assertThatRecordExists_givenNonExistingRecord_throwsException() {
         customerRepository.addRecord(customer2);
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(IllegalArgumentException.class)
                 .isThrownBy(()->customerRepository.assertThatRecordExists(customer1.getId()))
                 .withMessage("The record with ID: 0 couldn't be found.");
     }
 
     @Test
-    public void injectDefaultRecordData_HappyPath() {
+    public void injectDefaultRecordData_happyPath() {
         customerRepository.injectDefaultData(new CustomerData().getDefaultCustomers());
-        Assertions.assertThat(customerRepository.getAllRecords().size()).isGreaterThan(0);
+        assertThat(customerRepository.getAllRecords().size()).isGreaterThan(0);
     }
 
+    @Test
+    public void clear_happyPath() {
+        customerRepository.addRecord(customer2);
+        customerRepository.clear();
+        assertThat(customerRepository.getAllRecords().size()).isEqualTo(0);
+    }
 
+    @Test
+    public void updateRecord() {
+        customerRepository.addRecord(customer2);
+        int customerId = customer2.getId();
+        customerRepository.updateRecord(customer3, customerId);
+
+        assertThat(customerRepository.getRecordById(customerId)).isEqualTo(customer3);
+    }
 }

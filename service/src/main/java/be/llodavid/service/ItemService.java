@@ -15,7 +15,8 @@ import java.util.List;
 public class ItemService {
     private Repository<Item> itemRepository;
 
-    @Inject @Named("ItemRepo")
+    @Inject
+    @Named("ItemRepo")
     public ItemService(Repository<Item> itemRepository) {
         this.itemRepository = itemRepository;
     }
@@ -24,25 +25,31 @@ public class ItemService {
         itemRepository.injectDefaultData(new ItemData().getDefaultItems());
     }
 
-    public Item getItem(int itemID) throws UnknownResourceException {
-        if (itemRepository.recordExists(itemID)) {
-            return itemRepository.getRecordById(itemID);
-        }
-        throw new UnknownResourceException("item", "item ID: " + itemID);
+    public Item getItem(int itemId) throws UnknownResourceException {
+        verifyIfItemExists(itemId);
+        return itemRepository.getRecordById(itemId);
     }
 
     public Item addItem(Item item) {
-        if (!itemRepository.recordAlreadyInRepository(item)) {
-            return itemRepository.addRecord(item);
-        }
-        throw new DoubleEntryException("item", String.format("%s", item.getName()));
+        verifyItemDoesNotExistYet(item);
+        return itemRepository.addRecord(item);
     }
 
     public Item updateItem(Item item, int itemId) {
-        if (itemRepository.recordExists(itemId)) {
-            return itemRepository.updateRecord(item, itemId);
+        verifyIfItemExists(itemId);
+        return itemRepository.updateRecord(item, itemId);
+    }
+
+    private void verifyIfItemExists(int itemId) {
+        if (!itemRepository.recordExists(itemId)) {
+            throw new UnknownResourceException("item", "item ID: " + itemId);
         }
-        throw new UnknownResourceException("item", "item ID: " + itemId);
+    }
+
+    private void verifyItemDoesNotExistYet(Item item) {
+        if (itemRepository.recordAlreadyInRepository(item)) {
+            throw new DoubleEntryException("item", String.format("%s", item.getName()));
+        }
     }
 
     public List<Item> getAllItems() {
@@ -55,7 +62,7 @@ public class ItemService {
 
     public void modifyStock(List<ItemGroup> orderItems) {
         orderItems.stream()
-                .forEach(orderItem->modifyStock(orderItem));
+                .forEach(orderItem -> modifyStock(orderItem));
     }
 
     private void modifyStock(ItemGroup orderItem) {
