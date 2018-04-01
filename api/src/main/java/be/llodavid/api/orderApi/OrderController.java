@@ -1,12 +1,10 @@
 package be.llodavid.api.orderApi;
 
-import be.llodavid.service.ItemService;
 import be.llodavid.service.OrderService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import javax.inject.Inject;
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -47,6 +45,15 @@ public class OrderController {
         return orderService.getAllOrdersForCustomer(customerId)
                 .stream()
                 .map(order -> orderMapper.orderToDTO(order))
+                .collect(Collectors.toList());
+    }
+
+    @GetMapping(path = "shipping/today", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemsShippingTodayDTO> getItemsShippingToday() {
+        return orderService.viewOrderItemsShippingToday()
+                .entrySet().stream()
+                .map(itemsShippingToday -> orderMapper.toItemsShippingTodayDTO(itemsShippingToday))
                 .collect(Collectors.toList());
     }
 }

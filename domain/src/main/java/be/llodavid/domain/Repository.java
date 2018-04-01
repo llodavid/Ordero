@@ -4,6 +4,8 @@ import be.llodavid.domain.item.Item;
 
 import javax.inject.Named;
 import java.util.*;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class Repository<E extends RepositoryRecord> {
@@ -71,6 +73,18 @@ public class Repository<E extends RepositoryRecord> {
                 .filter(value -> valueId == value.getId())
                 .collect(Collectors.toList());
     }
+
+    public List<E> getFilteredRecords (Predicate<E> filter) {
+        return repository.values().stream()
+                .filter(value -> filter.test(value))
+                .collect(Collectors.toList());
+    }
+    public <F> List<F> filterRecordsWithFunction(Function<E, F> filter) {
+        return repository.values().stream()
+                .map(value -> filter.apply(value))
+                .collect(Collectors.toList());
+    }
+
     public void clear(){
         repository.clear();
         idCounter=0;

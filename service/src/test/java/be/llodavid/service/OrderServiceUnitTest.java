@@ -77,6 +77,7 @@ public class OrderServiceUnitTest {
 
     @Test
     public void getAllOrdersForCustomer_happyPath() {
+        //        when(orderRepository.getFilteredRecords(order -> order.getCustomerId() == 1)).thenReturn(Arrays.asList(order1, order2, order3));
         when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2, order3));
         when(order1.getCustomerId()).thenReturn(1);
         when(order2.getCustomerId()).thenReturn(2);

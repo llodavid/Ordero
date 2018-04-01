@@ -1,6 +1,9 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
+import be.llodavid.domain.customer.Customer;
+import be.llodavid.domain.item.Item;
+import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
 import be.llodavid.service.exceptions.UnknownResourceException;
@@ -11,6 +14,9 @@ import javax.inject.Named;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 @Named
@@ -47,8 +53,37 @@ public class OrderService {
 
     public List<Order> getAllOrdersForCustomer(int customerId) {
         customerService.verifyIfCustomerExists(customerId);
+        //Todo: find a way to mock predicate for testing purposes.
+//        return orderRepository.getFilteredRecords(order -> order.getCustomerId() == customerId);
         return orderRepository.getAllRecords().stream()
                 .filter(order -> order.getCustomerId() == customerId)
+                .collect(Collectors.toList());
+    }
+
+    public Map<Customer, List<ItemGroup>> viewOrderItemsShippingToday() {
+        return orderRepository.getAllRecords().stream()
+                .filter(order-> isAnyItemGroupShippingToday(order))
+                .collect(Collectors.toMap(
+                        order -> getCustomer(order),
+                        order -> itemsShippingToday(order)));
+    }
+
+    private boolean isAnyItemGroupShippingToday(Order order) {
+        return order.getOrderItems().stream()
+                .anyMatch(itemGroupShippingToday());
+    }
+
+    private Predicate<ItemGroup> itemGroupShippingToday() {
+        return itemGroup ->  itemGroup.getShippingDate().equals(LocalDate.now());
+    }
+
+    private Customer getCustomer(Order order) {
+        return customerService.getCustomer(order.getCustomerId());
+    }
+
+    private List<ItemGroup> itemsShippingToday(Order order) {
+        return order.getOrderItems().stream()
+                .filter(itemGroupShippingToday())
                 .collect(Collectors.toList());
     }
 

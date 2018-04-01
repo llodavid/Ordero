@@ -28,12 +28,12 @@ public class OrderData {
                 Arrays.asList(
                         new ItemGroup(item1, 2),
                         new ItemGroup(item2, 1)));
-        order1.finishOrder(LocalDate.now());
+        order1.finishOrder(LocalDate.now().minusDays(1));
         Order order2 = new Order(2,
                 Arrays.asList(
                         new ItemGroup(item1, 2),
                         new ItemGroup(item2, 1)));
-        order2.finishOrder(LocalDate.now());
+        order2.finishOrder(LocalDate.now().minusDays(2));
         return Arrays.asList(order1,
                 order2);
 
