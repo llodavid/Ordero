@@ -17,6 +17,12 @@ public class ItemData {
                         .withDescription("extra paws cost extra")
                         .withPrice(new BigDecimal(70))
                         .withStock(14)
+                        .build(),
+                Item.ItemBuilder.buildItem()
+                        .withName("Lego blocks")
+                        .withDescription("It's just simple blocks man, you can put them together and stuff.")
+                        .withPrice(new BigDecimal(10))
+                        .withStock(3)
                         .build());
     }
 }

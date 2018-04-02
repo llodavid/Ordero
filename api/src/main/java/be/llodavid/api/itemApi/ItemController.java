@@ -1,5 +1,6 @@
 package be.llodavid.api.itemApi;
 
+import be.llodavid.domain.order.StockSupplyLevel;
 import be.llodavid.service.ItemService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
@@ -44,6 +45,15 @@ public class ItemController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping(path = "/stock", produces = "application/json")
+    @ResponseStatus(HttpStatus.OK)
+    public List<ItemStockLevelDTO> getItemsGroupedOnStockResupplyUrgency(@RequestParam(name = "stockLevel", required = false) String stockLevel) {
+        return itemService.getItemsGroupedOnStockResupplyUrgency(StockSupplyLevel.parse(stockLevel))
+                .entrySet().stream()
+                .map(itemStockLevel -> itemMapper.toItemStockLevelDTO(itemStockLevel))
+                .collect(Collectors.toList());
+    }
+    
     @PutMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public ItemDTO updateItem(@PathVariable int itemId, @RequestBody ItemDTO item) {

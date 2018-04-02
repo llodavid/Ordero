@@ -4,12 +4,16 @@ import be.llodavid.domain.item.Item;
 import be.llodavid.domain.item.ItemData;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.order.ItemGroup;
+import be.llodavid.domain.order.StockSupplyLevel;
 import be.llodavid.service.exceptions.DoubleEntryException;
 import be.llodavid.service.exceptions.UnknownResourceException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 @Named
 public class ItemService {
@@ -54,6 +58,27 @@ public class ItemService {
 
     public List<Item> getAllItems() {
         return itemRepository.getAllRecords();
+    }
+
+    public Map<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (){
+        return this.getItemsGroupedOnStockResupplyUrgency(null);
+    }
+
+    public Map<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (StockSupplyLevel stockSupplyLevel){
+        return getAllItems().stream()
+                .filter(stockResupplyUrgency(stockSupplyLevel))
+                .collect(Collectors.groupingBy(
+                        item-> stockLevel(item)));
+    }
+
+    private Predicate<Item> stockResupplyUrgency(StockSupplyLevel stockSupplyLevel) {
+        return stockSupplyLevel == null ?
+                item -> true :
+                item-> stockLevel(item).equals(stockSupplyLevel);
+    }
+
+    private StockSupplyLevel stockLevel(Item item) {
+        return StockSupplyLevel.getStockSupplyLevel(item.getStock());
     }
 
     public ItemGroup createItemGroup(int itemId, int amount) {
