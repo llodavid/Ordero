@@ -53,7 +53,7 @@ public class ItemController {
                 .map(itemStockLevel -> itemMapper.toItemStockLevelDTO(itemStockLevel))
                 .collect(Collectors.toList());
     }
-    
+
     @PutMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
     public ItemDTO updateItem(@PathVariable int itemId, @RequestBody ItemDTO item) {

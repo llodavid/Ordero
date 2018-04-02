@@ -10,8 +10,7 @@ import be.llodavid.service.exceptions.UnknownResourceException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -60,15 +59,16 @@ public class ItemService {
         return itemRepository.getAllRecords();
     }
 
-    public Map<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (){
+    public SortedMap<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (){
         return this.getItemsGroupedOnStockResupplyUrgency(null);
     }
 
-    public Map<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (StockSupplyLevel stockSupplyLevel){
+    public SortedMap<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (StockSupplyLevel stockSupplyLevel){
         return getAllItems().stream()
                 .filter(stockResupplyUrgency(stockSupplyLevel))
+                .sorted(Comparator.comparing(Item::getStock))
                 .collect(Collectors.groupingBy(
-                        item-> stockLevel(item)));
+                        item-> stockLevel(item),TreeMap::new, Collectors.toList()));
     }
 
     private Predicate<Item> stockResupplyUrgency(StockSupplyLevel stockSupplyLevel) {
