@@ -14,6 +14,8 @@ import org.junit.Test;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 
 
 import static org.assertj.core.api.Assertions.*;
@@ -22,13 +24,13 @@ import static org.mockito.Mockito.mock;
 
 public class OrderServiceUnitTest {
     private Order order1, order2, order3;
-    private ItemGroup itemGroup1, itemGroup2;
+    private ItemGroup itemGroup1, itemGroup2, itemGroup3;
     private Repository<Order> orderRepository;
     private OrderService orderService;
     private CustomerService customerService;
     private ItemService itemService;
     private OrderData orderData;
-    private Customer customer;
+    private Customer customer, customer2;
 
 
     @Before
@@ -37,15 +39,16 @@ public class OrderServiceUnitTest {
         orderData = mock(OrderData.class);
         customerService = mock(CustomerService.class);
         itemService = mock(ItemService.class);
-        orderService = new OrderService(orderRepository, customerService,itemService);
+        orderService = new OrderService(orderRepository, customerService, itemService);
         customer = mock(Customer.class);
+        customer2 = mock(Customer.class);
         itemGroup1 = mock(ItemGroup.class);
         itemGroup2 = mock(ItemGroup.class);
-
+        itemGroup3 = mock(ItemGroup.class);
 
         order1 = mock(Order.class);
         order2 = mock(Order.class);
-        order3= mock(Order.class);
+        order3 = mock(Order.class);
     }
 
     @Test
@@ -54,7 +57,7 @@ public class OrderServiceUnitTest {
         orderService.injectDefaultData();
         verify(orderRepository, times(1)).injectDefaultData(new OrderData().getDefaultOrders());
     }
-    
+
     @Test
     public void getOrder_happyPath() {
         when(orderRepository.getRecordById(1)).thenReturn(order1);
@@ -68,7 +71,7 @@ public class OrderServiceUnitTest {
         when(orderRepository.recordExists(1)).thenReturn(true);
         assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> orderService.getOrder(15)).withMessage("The order could not be found based on the provided order ID: 15.");
     }
-    
+
     @Test
     public void getAllOrders_happyPath() {
         when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2));
@@ -93,5 +96,27 @@ public class OrderServiceUnitTest {
         when(order1.getOrderItems()).thenReturn(Arrays.asList(itemGroup1));
         assertThat(orderService.createOrder(order1)).isEqualTo(order1);
         verify(itemService, times(1)).modifyStock(Arrays.asList(itemGroup1));
+    }
+
+    @Test
+    public void viewOrderItemsShippingToday() {
+        when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2));
+        when(order1.getOrderItems()).thenReturn(Arrays.asList(itemGroup1, itemGroup2));
+        when(order2.getOrderItems()).thenReturn(Arrays.asList(itemGroup1, itemGroup2, itemGroup3));
+        when(itemGroup1.getShippingDate()).thenReturn(LocalDate.now());
+        when(itemGroup2.getShippingDate()).thenReturn(LocalDate.now().minusDays(1));
+        when(itemGroup3.getShippingDate()).thenReturn(LocalDate.now());
+
+        when(order1.getCustomerId()).thenReturn(1);
+        when(order2.getCustomerId()).thenReturn(2);
+
+        when(customerService.getCustomer(1)).thenReturn(customer);
+        when(customerService.getCustomer(2)).thenReturn(customer2);
+
+        Map<Customer, List<ItemGroup>> ordersShippingToday = orderService.viewOrderItemsShippingToday();
+
+        assertThat(ordersShippingToday.get(customer)).isEqualTo(Arrays.asList(itemGroup1));
+        assertThat(ordersShippingToday.get(customer2)).containsOnly(itemGroup1, itemGroup3);
+
     }
 }

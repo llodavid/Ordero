@@ -50,7 +50,7 @@ public class OrderController {
 
     @GetMapping(path = "shipping/today", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public List<ItemsShippingTodayDTO> getItemsShippingToday() {
+    public List<ItemsShippingTodayDTO> viewOrderItemsShippingToday() {
         return orderService.viewOrderItemsShippingToday()
                 .entrySet().stream()
                 .map(itemsShippingToday -> orderMapper.toItemsShippingTodayDTO(itemsShippingToday))
