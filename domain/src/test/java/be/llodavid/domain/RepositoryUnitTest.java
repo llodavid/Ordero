@@ -80,7 +80,7 @@ public class RepositoryUnitTest {
         customerRepository.addRecord(customer1);
         assertThatExceptionOfType(OrderoException.class)
                 .isThrownBy(()->customerRepository.addRecord(customer1))
-                .withMessage("The record already exists.");
+                .withMessage("The customer already exists in the database.");
     }
 
     @Test

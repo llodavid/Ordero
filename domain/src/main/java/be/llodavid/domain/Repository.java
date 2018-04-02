@@ -50,7 +50,7 @@ public class Repository<E extends RepositoryRecord> {
 
     private void verifyIfRecordAlreadyExists(E record) {
         if (recordAlreadyInRepository(record)) {
-            throw new OrderoException(String.format("The %s already exists in the database", record.getClass().getSimpleName().toLowerCase()));
+            throw new OrderoException(String.format("The %s already exists in the database.", record.getClass().getSimpleName().toLowerCase()));
         }
     }
 
