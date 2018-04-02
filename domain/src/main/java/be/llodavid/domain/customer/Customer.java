@@ -1,8 +1,8 @@
 package be.llodavid.domain.customer;
 
-import be.llodavid.domain.helperClass.Address;
-import be.llodavid.domain.helperClass.EmailValidation;
 import be.llodavid.domain.RepositoryRecord;
+import be.llodavid.util.exceptions.OrderoException;
+import be.llodavid.util.helperClass.EmailValidation;
 
 import java.util.Objects;
 
@@ -86,7 +86,7 @@ public class Customer implements RepositoryRecord {
             if (allFieldsSet()) {
                 return new Customer(this);
             }
-            throw new IllegalArgumentException("Please provide all the necessary arguments.");
+            throw new OrderoException("Please provide all the necessary arguments.");
         }
 
         public static CustomerBuilder buildCustomer() {
@@ -127,7 +127,7 @@ public class Customer implements RepositoryRecord {
 
         public CustomerBuilder withEmail(String email) {
             if (!EmailValidation.isValidEmail(email)) {
-                throw new IllegalArgumentException("Please provide a valid E-mail address!");
+                throw new OrderoException("Please provide a valid E-mail address!");
             }
             this.email = email;
             return this;

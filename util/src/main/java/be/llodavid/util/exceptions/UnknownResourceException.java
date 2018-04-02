@@ -1,4 +1,4 @@
-package be.llodavid.service.exceptions;
+package be.llodavid.util.exceptions;
 
 public class UnknownResourceException extends OrderoException {
 

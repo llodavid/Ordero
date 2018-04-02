@@ -1,12 +1,10 @@
 package be.llodavid.api.shoppingApi;
 
-import be.llodavid.domain.helperClass.BelgianDateFormatter;
+import be.llodavid.util.helperClass.BelgianDateFormatter;
 import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.ItemGroup;
 
 import javax.inject.Named;
-import java.time.format.DateTimeFormatter;
-import java.util.Locale;
 
 @Named
 public class ItemGroupMapper {

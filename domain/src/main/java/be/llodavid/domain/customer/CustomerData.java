@@ -1,7 +1,5 @@
 package be.llodavid.domain.customer;
 
-import be.llodavid.domain.helperClass.Address;
-
 import java.util.Arrays;
 import java.util.List;
 

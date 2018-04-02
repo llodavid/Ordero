@@ -3,7 +3,7 @@ package be.llodavid.api.customerApi;
 import be.llodavid.api.TestApplication;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.helperClass.Address;
+import be.llodavid.domain.customer.Address;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;

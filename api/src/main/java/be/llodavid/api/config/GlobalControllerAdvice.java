@@ -1,10 +1,10 @@
 package be.llodavid.api.config;
 
 import be.llodavid.service.CustomerService;
-import be.llodavid.service.exceptions.DoubleEntryException;
-import be.llodavid.service.exceptions.OrderoException;
-import be.llodavid.service.exceptions.PaymentNotReceivedException;
-import be.llodavid.service.exceptions.UnknownResourceException;
+import be.llodavid.util.exceptions.DoubleEntryException;
+import be.llodavid.util.exceptions.OrderoException;
+import be.llodavid.util.exceptions.PaymentNotReceivedException;
+import be.llodavid.util.exceptions.UnknownResourceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;

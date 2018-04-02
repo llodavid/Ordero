@@ -1,6 +1,6 @@
 package be.llodavid.api.customerApi;
 
-import be.llodavid.domain.helperClass.Address;
+import be.llodavid.domain.customer.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)

@@ -1,5 +1,6 @@
 package be.llodavid.domain.item;
 
+import be.llodavid.util.exceptions.OrderoException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -36,7 +37,7 @@ public class ItemUnitTest {
 
     @Test
     public void addItemsToStock_givenNegativeAmount_throwsException() {
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(()-> item1.addItemsToStock(-10));
+        Assertions.assertThatExceptionOfType(OrderoException.class).isThrownBy(()-> item1.addItemsToStock(-10));
     }
 
     @Test
@@ -54,7 +55,7 @@ public class ItemUnitTest {
 
     @Test
     public void correctStock_givenNegativeAmount_ThrowsException() {
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(()-> item1.correctStock(-10));
+        Assertions.assertThatExceptionOfType(OrderoException.class).isThrownBy(()-> item1.correctStock(-10));
     }
 
     @Test
@@ -73,7 +74,7 @@ public class ItemUnitTest {
 
     @Test
     public void build_givenMissingRequiredFields_throwsException() {
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(()->Item.ItemBuilder.buildItem()
+        Assertions.assertThatExceptionOfType(OrderoException.class).isThrownBy(()->Item.ItemBuilder.buildItem()
                 .withName("Chair with two paws")
                 .withDescription("extra paws cost extra")
                 .withStock(14)

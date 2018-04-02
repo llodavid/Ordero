@@ -1,4 +1,6 @@
-package be.llodavid.domain.helperClass;
+package be.llodavid.domain.customer;
+
+import be.llodavid.util.exceptions.OrderoException;
 
 public class Address {
     private String street;
@@ -61,7 +63,7 @@ public class Address {
                 addDefaultCountryIfNotSet();
                 return new Address(this);
             } else {
-                throw new IllegalArgumentException("Please provide all the necessary arguments for the Address.");
+                throw new OrderoException("Please provide all the necessary arguments for the Address.");
             }
         }
 

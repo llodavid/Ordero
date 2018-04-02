@@ -1,5 +1,7 @@
-package be.llodavid.domain.helperClass;
+package be.llodavid.domain.customer;
 
+import be.llodavid.domain.customer.Address;
+import be.llodavid.util.exceptions.OrderoException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -22,7 +24,7 @@ public class AddressBuilderUnitTest {
 
     @Test
     public void buildAddress_givenMissingRequiredFields_throwsException() {
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(()->
+        Assertions.assertThatExceptionOfType(OrderoException.class).isThrownBy(()->
                 Address.AddressBuilder.buildAddress()
                 .withStreet("steenweg")
                 .withHousenumber("53")

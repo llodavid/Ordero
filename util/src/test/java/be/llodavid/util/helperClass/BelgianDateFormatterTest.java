@@ -1,4 +1,4 @@
-package be.llodavid.domain.helperClass;
+package be.llodavid.util.helperClass;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -6,7 +6,6 @@ import org.junit.Test;
 import java.time.LocalDate;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
 
 public class BelgianDateFormatterTest {
 

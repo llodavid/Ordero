@@ -3,8 +3,8 @@ package be.llodavid.service;
 import be.llodavid.domain.customer.Customer;
 import be.llodavid.domain.customer.CustomerData;
 import be.llodavid.domain.Repository;
-import be.llodavid.service.exceptions.UnknownResourceException;
-import be.llodavid.service.exceptions.DoubleEntryException;
+import be.llodavid.util.exceptions.DoubleEntryException;
+import be.llodavid.util.exceptions.UnknownResourceException;
 
 import javax.inject.Inject;
 import javax.inject.Named;

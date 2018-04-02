@@ -5,8 +5,8 @@ import be.llodavid.domain.item.ItemData;
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.StockSupplyLevel;
-import be.llodavid.service.exceptions.DoubleEntryException;
-import be.llodavid.service.exceptions.UnknownResourceException;
+import be.llodavid.util.exceptions.DoubleEntryException;
+import be.llodavid.util.exceptions.UnknownResourceException;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -59,22 +59,22 @@ public class ItemService {
         return itemRepository.getAllRecords();
     }
 
-    public SortedMap<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (){
+    public SortedMap<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency() {
         return this.getItemsGroupedOnStockResupplyUrgency(null);
     }
 
-    public SortedMap<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency (StockSupplyLevel stockSupplyLevel){
+    public SortedMap<StockSupplyLevel, List<Item>> getItemsGroupedOnStockResupplyUrgency(StockSupplyLevel stockSupplyLevel) {
         return getAllItems().stream()
                 .filter(stockResupplyUrgency(stockSupplyLevel))
                 .sorted(Comparator.comparing(Item::getStock))
                 .collect(Collectors.groupingBy(
-                        item-> stockLevel(item),TreeMap::new, Collectors.toList()));
+                        item -> stockLevel(item), TreeMap::new, Collectors.toList()));
     }
 
     private Predicate<Item> stockResupplyUrgency(StockSupplyLevel stockSupplyLevel) {
         return stockSupplyLevel == null ?
                 item -> true :
-                item-> stockLevel(item).equals(stockSupplyLevel);
+                item -> stockLevel(item).equals(stockSupplyLevel);
     }
 
     private StockSupplyLevel stockLevel(Item item) {

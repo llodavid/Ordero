@@ -2,8 +2,8 @@ package be.llodavid.domain;
 
 import be.llodavid.domain.customer.Customer;
 import be.llodavid.domain.customer.CustomerData;
-import be.llodavid.domain.helperClass.Address;
-import org.assertj.core.api.Assertions;
+import be.llodavid.domain.customer.Address;
+import be.llodavid.util.exceptions.OrderoException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -78,7 +78,7 @@ public class RepositoryUnitTest {
     @Test
     public void addRecord_givenExistingRecord_throwsException() {
         customerRepository.addRecord(customer1);
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(OrderoException.class)
                 .isThrownBy(()->customerRepository.addRecord(customer1))
                 .withMessage("The record already exists.");
     }
@@ -86,7 +86,7 @@ public class RepositoryUnitTest {
     @Test
     public void assertThatRecordExists_givenNonExistingRecord_throwsException() {
         customerRepository.addRecord(customer2);
-        assertThatExceptionOfType(IllegalArgumentException.class)
+        assertThatExceptionOfType(OrderoException.class)
                 .isThrownBy(()->customerRepository.assertThatRecordExists(customer1.getId()))
                 .withMessage("The record with ID: 0 couldn't be found.");
     }

@@ -1,6 +1,7 @@
 package be.llodavid.domain.order;
 
 import be.llodavid.domain.item.Item;
+import be.llodavid.util.exceptions.OrderoException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -32,13 +33,13 @@ public class ItemGroup {
 
     private void verifyPriceIsPositive(BigDecimal price) {
         if (price.compareTo(ZERO) < 0) {
-            throw new IllegalArgumentException("Price has to be positive");
+            throw new OrderoException("Price has to be positive");
         }
     }
 
     private void verifyAmountIsPositive(int amount) {
         if (amount < 1) {
-            throw new IllegalArgumentException("Amount ordered has to be positive");
+            throw new OrderoException("Amount ordered has to be positive");
         }
     }
 

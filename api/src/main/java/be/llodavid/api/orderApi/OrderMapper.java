@@ -3,7 +3,7 @@ package be.llodavid.api.orderApi;
 import be.llodavid.api.customerApi.CustomerMapper;
 import be.llodavid.api.shoppingApi.ItemGroupMapper;
 import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.helperClass.BelgianDateFormatter;
+import be.llodavid.util.helperClass.BelgianDateFormatter;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 

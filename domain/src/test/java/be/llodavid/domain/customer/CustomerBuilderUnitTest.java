@@ -1,6 +1,6 @@
 package be.llodavid.domain.customer;
 
-import be.llodavid.domain.helperClass.Address;
+import be.llodavid.util.exceptions.OrderoException;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -31,7 +31,7 @@ public class CustomerBuilderUnitTest {
 
     @Test
     public void build_givenMissingRequiredFields_throwsException() {
-        Assertions.assertThatExceptionOfType(IllegalArgumentException.class)
+        Assertions.assertThatExceptionOfType(OrderoException.class)
                 .isThrownBy(()->Customer.CustomerBuilder.buildCustomer()
                         .withFirstName("David")
                         .withLastName("Van den Bergh")

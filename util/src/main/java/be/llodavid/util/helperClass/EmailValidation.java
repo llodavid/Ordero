@@ -1,4 +1,4 @@
-package be.llodavid.domain.helperClass;
+package be.llodavid.util.helperClass;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

@@ -4,8 +4,8 @@ import be.llodavid.domain.Repository;
 import be.llodavid.domain.item.Item;
 import be.llodavid.domain.item.ItemData;
 import be.llodavid.domain.order.ItemGroup;
-import be.llodavid.service.exceptions.DoubleEntryException;
-import be.llodavid.service.exceptions.UnknownResourceException;
+import be.llodavid.util.exceptions.DoubleEntryException;
+import be.llodavid.util.exceptions.UnknownResourceException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
@@ -15,7 +15,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.Mockito.mock;
 

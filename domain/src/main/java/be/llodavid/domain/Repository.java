@@ -1,6 +1,7 @@
 package be.llodavid.domain;
 
 import be.llodavid.domain.item.Item;
+import be.llodavid.util.exceptions.OrderoException;
 
 import javax.inject.Named;
 import java.util.*;
@@ -29,7 +30,7 @@ public class Repository<E extends RepositoryRecord> {
 
     public void assertThatRecordExists(int recordId) {
         if (!recordExists(recordId)) {
-            throw new IllegalArgumentException("The record with ID: " + recordId + " couldn't be found.");
+            throw new OrderoException("The record with ID: " + recordId + " couldn't be found.");
         }
     }
 
@@ -41,9 +42,9 @@ public class Repository<E extends RepositoryRecord> {
         return Collections.unmodifiableList(new ArrayList<>(repository.values()));
     }
 
-    public E addRecord(E record) throws IllegalArgumentException {
+    public E addRecord(E record) throws OrderoException {
         if (recordAlreadyInRepository(record)) {
-            throw new IllegalArgumentException("The record already exists.");
+            throw new OrderoException("The record already exists.");
         }
         return addRecordToRepository(record);
     }

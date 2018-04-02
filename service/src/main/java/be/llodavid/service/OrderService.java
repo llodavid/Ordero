@@ -5,7 +5,7 @@ import be.llodavid.domain.customer.Customer;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
-import be.llodavid.service.exceptions.UnknownResourceException;
+import be.llodavid.util.exceptions.UnknownResourceException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;

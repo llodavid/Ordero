@@ -4,8 +4,8 @@ import be.llodavid.domain.Repository;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.ShoppingCart;
-import be.llodavid.service.exceptions.OrderoException;
-import be.llodavid.service.exceptions.UnknownResourceException;
+import be.llodavid.util.exceptions.OrderoException;
+import be.llodavid.util.exceptions.UnknownResourceException;
 import org.junit.Before;
 import org.junit.Test;
 

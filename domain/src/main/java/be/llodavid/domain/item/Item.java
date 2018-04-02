@@ -1,6 +1,7 @@
 package be.llodavid.domain.item;
 
 import be.llodavid.domain.RepositoryRecord;
+import be.llodavid.util.exceptions.OrderoException;
 
 import java.math.BigDecimal;
 import java.util.Objects;
@@ -12,7 +13,7 @@ public class Item implements RepositoryRecord {
     private String name;
     private String description;
     private BigDecimal price;
-    private int stock;
+    private int stock, backOrderedItems;
 
     private Item(ItemBuilder itemBuilder) {
         this.name = itemBuilder.name;
@@ -25,19 +26,21 @@ public class Item implements RepositoryRecord {
 
     private void verifyPriceIsPositive(BigDecimal price) {
         if (price.compareTo(ZERO) < 0) {
-            throw new IllegalArgumentException("Price has to be positive");
+            throw new OrderoException("Price has to be positive");
         }
     }
 
     private void verifyStockIsPositive(int stock) {
         if (stock < 0) {
-            throw new IllegalArgumentException("Stock cannot be negative.");
+            throw new OrderoException("Stock cannot be negative.");
         }
     }
+
     @Override
     public void setId(int valueId) {
         this.itemId = valueId;
     }
+
     @Override
     public int getId() {
         return itemId;
@@ -66,7 +69,7 @@ public class Item implements RepositoryRecord {
 
     private void verifyIfItemsToAddIsEqualOrGreaterThanZero(int nrOfItems) {
         if (nrOfItems <= 0) {
-            throw new IllegalArgumentException("Adding extra items has to be positive.");
+            throw new OrderoException("Adding extra items has to be positive.");
         }
     }
 
@@ -75,15 +78,14 @@ public class Item implements RepositoryRecord {
         this.stock = 0;
         addItemsToStock(stock);
     }
-    public void decreaseStock(int stock) {
-        verifyStockIsPositive(stock);
-        verifyIfSufficientStockAvailable(stock);
-        this.stock-=stock;
-    }
 
-    private void verifyIfSufficientStockAvailable(int stock) {
-        if (stock > this.stock) {
-            throw new IllegalArgumentException("Not enough stock available");
+    public void decreaseStock(int amount) {
+        verifyStockIsPositive(amount);
+        if (amount <= stock) {
+            stock -= amount;
+        } else {
+            backOrderedItems += amount - stock;
+            stock = 0;
         }
     }
 
@@ -116,7 +118,7 @@ public class Item implements RepositoryRecord {
             if (allFielsSet()) {
                 return new Item(this);
             } else {
-                throw new IllegalArgumentException("Please provide all the necessary arguments for the item.");
+                throw new OrderoException("Please provide all the necessary arguments for the item.");
             }
         }
 

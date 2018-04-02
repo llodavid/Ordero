@@ -2,12 +2,10 @@ package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
 import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.item.Item;
 import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.Order;
 import be.llodavid.domain.order.OrderData;
-import be.llodavid.service.exceptions.UnknownResourceException;
-import org.assertj.core.api.Assertions;
+import be.llodavid.util.exceptions.UnknownResourceException;
 import org.junit.Before;
 import org.junit.Test;
 

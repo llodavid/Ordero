@@ -2,14 +2,13 @@ package be.llodavid.service;
 
 import be.llodavid.domain.customer.Customer;
 import be.llodavid.domain.customer.CustomerData;
-import be.llodavid.domain.helperClass.Address;
+import be.llodavid.domain.customer.Address;
 import be.llodavid.domain.Repository;
-import be.llodavid.service.exceptions.DoubleEntryException;
-import be.llodavid.service.exceptions.UnknownResourceException;
+import be.llodavid.util.exceptions.DoubleEntryException;
+import be.llodavid.util.exceptions.UnknownResourceException;
 import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.Mockito;
 
 import java.util.ArrayList;
 import java.util.Arrays;

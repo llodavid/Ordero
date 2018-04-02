@@ -1,5 +1,6 @@
 package be.llodavid.domain.order;
 
+import be.llodavid.util.exceptions.OrderoException;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -44,6 +45,6 @@ public class OrderUnitTest {
         order = new Order(1, Arrays.asList(itemGroup1,itemGroup2));
         order.finishOrder(LocalDate.of(2018,03,26));
 
-        assertThatExceptionOfType(IllegalArgumentException.class).isThrownBy(()->order.finishOrder(LocalDate.of(2018,03,26)));
+        assertThatExceptionOfType(OrderoException.class).isThrownBy(()->order.finishOrder(LocalDate.of(2018,03,26)));
     }
 }

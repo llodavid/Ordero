@@ -1,6 +1,7 @@
 package be.llodavid.domain.order;
 
 import be.llodavid.domain.RepositoryRecord;
+import be.llodavid.util.exceptions.OrderoException;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,7 +28,7 @@ public class Order implements RepositoryRecord {
 
     private void verifyIfAtLeastOneItemGroup(List<ItemGroup> orderItems) {
         if (orderItems == null || orderItems.size()<1) {
-            throw new IllegalArgumentException("Please add at least 1 item to the order.");
+            throw new OrderoException("Please add at least 1 item to the order.");
         }
     }
 
@@ -41,7 +42,7 @@ public class Order implements RepositoryRecord {
 
     private void verifyIfOrderAlreadyPaid() {
         if (orderStatus != CREATED) {
-            throw new IllegalArgumentException("Order has already been paid.");
+            throw new OrderoException("Order has already been paid.");
         }
     }
 
