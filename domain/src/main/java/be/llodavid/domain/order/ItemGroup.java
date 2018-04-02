@@ -106,7 +106,6 @@ public class ItemGroup {
 
     @Override
     public int hashCode() {
-
         return Objects.hash(itemId, name, price, amount);
     }
 }

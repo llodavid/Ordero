@@ -5,6 +5,7 @@ import be.llodavid.domain.customer.CustomerData;
 import be.llodavid.domain.Repository;
 import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.UnknownResourceException;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -14,8 +15,8 @@ import java.util.List;
 public class CustomerService {
     private Repository<Customer> customerRepository;
 
-    @Inject @Named("CustomerRepo")
-    public CustomerService(Repository<Customer> customerRepository) {
+    @Inject
+    public CustomerService(@Qualifier("CustomerRepo")Repository<Customer> customerRepository) {
         this.customerRepository = customerRepository;
     }
 

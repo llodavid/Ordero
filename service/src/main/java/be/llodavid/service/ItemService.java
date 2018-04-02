@@ -7,6 +7,7 @@ import be.llodavid.domain.order.ItemGroup;
 import be.llodavid.domain.order.StockSupplyLevel;
 import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.UnknownResourceException;
+import org.springframework.beans.factory.annotation.Qualifier;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,8 +20,7 @@ public class ItemService {
     private Repository<Item> itemRepository;
 
     @Inject
-    @Named("ItemRepo")
-    public ItemService(Repository<Item> itemRepository) {
+    public ItemService(@Qualifier("ItemRepo") Repository<Item> itemRepository) {
         this.itemRepository = itemRepository;
     }
 
