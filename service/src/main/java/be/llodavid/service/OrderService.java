@@ -58,9 +58,15 @@ public class OrderService {
                 .collect(Collectors.toList());
     }
 
+    public Order createOrder(Order order) {
+        itemService.modifyStock(order.getOrderItems());
+        order.finishOrder(LocalDate.now());
+        return orderRepository.addRecord(order);
+    }
+
     public Map<Customer, List<ItemGroup>> viewOrderItemsShippingToday() {
         return orderRepository.getAllRecords().stream()
-                .filter(order-> isOneOfTheItemGroupsShippingToday(order))
+                .filter(order -> isOneOfTheItemGroupsShippingToday(order))
                 .collect(Collectors.toMap(
                         order -> getCustomer(order),
                         order -> itemsShippingToday(order)));
@@ -72,7 +78,7 @@ public class OrderService {
     }
 
     private Predicate<ItemGroup> itemGroupShippingToday() {
-        return itemGroup ->  itemGroup.getShippingDate().equals(LocalDate.now());
+        return itemGroup -> itemGroup.getShippingDate().equals(LocalDate.now());
     }
 
     private Customer getCustomer(Order order) {
@@ -83,11 +89,5 @@ public class OrderService {
         return order.getOrderItems().stream()
                 .filter(itemGroupShippingToday())
                 .collect(Collectors.toList());
-    }
-
-    public Order createOrder(Order order) {
-        itemService.modifyStock(order.getOrderItems());
-        order.finishOrder(LocalDate.now());
-        return orderRepository.addRecord(order);
     }
 }

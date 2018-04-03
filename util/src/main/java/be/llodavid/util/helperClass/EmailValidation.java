@@ -10,11 +10,7 @@ public class EmailValidation {
 
 
     public static boolean isValidEmail(String emailAddress) {
-        return isValidEmailAddress(emailAddress);
-    }
-
-    private static boolean isValidEmailAddress(String email) {
-        Matcher matcher = VALID_EMAIL.matcher(email);
+        Matcher matcher = VALID_EMAIL.matcher(emailAddress);
         return matcher.find();
     }
 }
