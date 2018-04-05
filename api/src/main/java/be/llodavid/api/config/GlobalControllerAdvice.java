@@ -50,7 +50,15 @@ public class GlobalControllerAdvice {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<String> handleGeneralException(final RuntimeException exception){
+    public ResponseEntity<String> handleGeneralRuntimeException(final RuntimeException exception){
+        LOGGER.log(Level.SEVERE,"ERROR: " + exception.getMessage());
+        return new ResponseEntity<>(
+                exception.getMessage(),
+                HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<String> handleGeneralException(final Exception exception){
         LOGGER.log(Level.SEVERE,"ERROR: " + exception.getMessage());
         return new ResponseEntity<>(
                 exception.getMessage(),

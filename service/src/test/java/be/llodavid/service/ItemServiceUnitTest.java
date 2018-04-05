@@ -1,9 +1,9 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
-import be.llodavid.domain.item.Item;
-import be.llodavid.domain.item.ItemData;
-import be.llodavid.domain.order.ItemGroup;
+import be.llodavid.domain.items.Item;
+import be.llodavid.domain.items.ItemData;
+import be.llodavid.domain.orders.ItemGroup;
 import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.UnknownResourceException;
 import org.assertj.core.api.Assertions;
@@ -65,7 +65,7 @@ public class ItemServiceUnitTest {
     public void getItem_givenItemThatDoesNotExist_throwsException() {
         when(itemRepository.getRecordById(1)).thenReturn(item1);
         when(itemRepository.recordExists(1)).thenReturn(true);
-        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> itemService.getItem(15)).withMessage("The item could not be found based on the provided item ID: 15.");
+        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> itemService.getItem(15)).withMessage("The items could not be found based on the provided items ID: 15.");
     }
 
     @Test
@@ -77,7 +77,7 @@ public class ItemServiceUnitTest {
     @Test
     public void addItem_givenItemThatAlreadyExists_throwsException() {
         when(itemRepository.recordAlreadyInRepository(item1)).thenReturn(true);
-        assertThatExceptionOfType(DoubleEntryException.class).isThrownBy(() -> itemService.addItem(item1)).withMessage("The item LG 55 inch OLED TV is already present in the system.");
+        assertThatExceptionOfType(DoubleEntryException.class).isThrownBy(() -> itemService.addItem(item1)).withMessage("The items LG 55 inch OLED TV is already present in the system.");
     }
 
     @Test
@@ -109,7 +109,7 @@ public class ItemServiceUnitTest {
     public void updateItem_givenNonExistingCustomer_throwsException() {
         when(itemRepository.recordExists(10)).thenReturn(false);
         when(itemRepository.updateRecord(item,1)).thenReturn(item);
-        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> itemService.updateItem(item, 10)).withMessage("The item could not be found based on the provided item ID: 10.");
+        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> itemService.updateItem(item, 10)).withMessage("The items could not be found based on the provided items ID: 10.");
     }
 
     @Test

@@ -1,9 +1,9 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
-import be.llodavid.domain.order.ItemGroup;
-import be.llodavid.domain.order.Order;
-import be.llodavid.domain.order.ShoppingCart;
+import be.llodavid.domain.orders.ItemGroup;
+import be.llodavid.domain.orders.Order;
+import be.llodavid.domain.orders.ShoppingCart;
 import be.llodavid.util.exceptions.OrderoException;
 import be.llodavid.util.exceptions.UnknownResourceException;
 import org.junit.Before;
@@ -56,7 +56,7 @@ public class ShoppingServiceUnitTest {
         when(customerService.customerExists(1)).thenReturn(true);
         shoppingService.addItemToShoppingCart(itemGroup1, 1);
         shoppingService.addItemToShoppingCart(itemGroup2, 1);
-        when(orderService.createOrder(new Order(1,Arrays.asList(itemGroup1,itemGroup2)))).thenReturn(order);
+        when(orderService.addOrder(new Order(1,Arrays.asList(itemGroup1,itemGroup2)))).thenReturn(order);
         assertThat(shoppingService.createOrderFromShoppingCart(1)).isEqualTo(order);
     }
 
@@ -110,7 +110,7 @@ public class ShoppingServiceUnitTest {
         when(itemGroup1.getItemId()).thenReturn(1);
         when(order.getOrderItems()).thenReturn(Collections.singletonList(itemGroup1));
         when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
-        when(orderService.createOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
+        when(orderService.addOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
 
         assertThat(shoppingService.reOrder(1,1)).isEqualTo(order);
     }
@@ -121,10 +121,10 @@ public class ShoppingServiceUnitTest {
         when(itemGroup1.getItemId()).thenReturn(1);
         when(order.getOrderItems()).thenReturn(Collections.singletonList(itemGroup1));
         when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
-        when(orderService.createOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
+        when(orderService.addOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
 
         assertThatExceptionOfType(OrderoException.class).isThrownBy(
                 ()->shoppingService.reOrder(1,1))
-                .withMessage("A customer can only re-order one of their own orders");
+                .withMessage("A customers can only re-orders one of their own orders");
     }
 }

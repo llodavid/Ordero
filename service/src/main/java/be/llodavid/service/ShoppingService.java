@@ -1,8 +1,8 @@
 package be.llodavid.service;
 
-import be.llodavid.domain.order.ItemGroup;
-import be.llodavid.domain.order.Order;
-import be.llodavid.domain.order.ShoppingCart;
+import be.llodavid.domain.orders.ItemGroup;
+import be.llodavid.domain.orders.Order;
+import be.llodavid.domain.orders.ShoppingCart;
 import be.llodavid.util.exceptions.OrderoException;
 import be.llodavid.util.exceptions.UnknownResourceException;
 
@@ -18,7 +18,7 @@ public class ShoppingService {
     private CustomerService customerService;
     private ItemService itemService;
 
-    //I use LinkedHashMap, so you always see the items in the same order.
+    //I use LinkedHashMap, so you always see the items in the same orders.
     @Inject
     public ShoppingService(OrderService orderService, CustomerService customerService, ItemService itemService) {
         shoppingCarts = new LinkedHashMap<>();
@@ -50,7 +50,7 @@ public class ShoppingService {
     public Order createOrderFromShoppingCart(int customerId) {
         customerService.verifyIfCustomerExists(customerId);
         verifyIfCustomerHasShoppingCart(customerId);
-        Order order = orderService.createOrder(
+        Order order = orderService.addOrder(
                 getShoppingCart(customerId).createOrder());
         clearShoppingCart(customerId);
         return order;
@@ -71,7 +71,7 @@ public class ShoppingService {
     }
 
     public Order reOrder(int customerId, int orderId) {
-        return orderService.createOrder(
+        return orderService.addOrder(
                 new Order(customerId,
                         refreshItemData(retrieveCustomerOrder(customerId, orderId))));
     }
@@ -97,7 +97,7 @@ public class ShoppingService {
 
     private void verifyIfOrderIsOfCustomer(int customerId, int orderCustomerId) {
         if (orderCustomerId != customerId) {
-            throw new OrderoException("A customer can only re-order one of their own orders");
+            throw new OrderoException("A customers can only re-orders one of their own orders");
         }
     }
 

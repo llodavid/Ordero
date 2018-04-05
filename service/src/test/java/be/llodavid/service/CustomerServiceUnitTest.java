@@ -1,8 +1,8 @@
 package be.llodavid.service;
 
-import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.customer.CustomerData;
-import be.llodavid.domain.customer.Address;
+import be.llodavid.domain.customers.Customer;
+import be.llodavid.domain.customers.CustomerData;
+import be.llodavid.domain.customers.Address;
 import be.llodavid.domain.Repository;
 import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.UnknownResourceException;
@@ -91,7 +91,7 @@ public class CustomerServiceUnitTest {
     public void getCustomer_givenCustomerThatDoesNotExist_throwsException() {
         when(customerRepository.getRecordById(1)).thenReturn(customer1);
         when(customerRepository.recordExists(1)).thenReturn(true);
-        Assertions.assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> customerService.getCustomer(15)).withMessage("The customer could not be found based on the provided customer ID: 15.");
+        Assertions.assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> customerService.getCustomer(15)).withMessage("The customers could not be found based on the provided customers ID: 15.");
     }
 
     @Test
@@ -103,7 +103,7 @@ public class CustomerServiceUnitTest {
     @Test
     public void addCustomer_givenCustomerThatAlreadyExists_throwsException() {
         when(customerRepository.recordAlreadyInRepository(customer1)).thenReturn(true);
-        Assertions.assertThatExceptionOfType(DoubleEntryException.class).isThrownBy(() -> customerService.addCustomer(customer1)).withMessage("The customer David Van den Bergh is already present in the system.");
+        Assertions.assertThatExceptionOfType(DoubleEntryException.class).isThrownBy(() -> customerService.addCustomer(customer1)).withMessage("The customers David Van den Bergh is already present in the system.");
     }
 
     @Test

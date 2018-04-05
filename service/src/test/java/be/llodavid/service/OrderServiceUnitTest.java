@@ -1,10 +1,10 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
-import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.order.ItemGroup;
-import be.llodavid.domain.order.Order;
-import be.llodavid.domain.order.OrderData;
+import be.llodavid.domain.customers.Customer;
+import be.llodavid.domain.orders.ItemGroup;
+import be.llodavid.domain.orders.Order;
+import be.llodavid.domain.orders.OrderData;
 import be.llodavid.util.exceptions.UnknownResourceException;
 import org.junit.Before;
 import org.junit.Test;
@@ -67,7 +67,7 @@ public class OrderServiceUnitTest {
     public void getOrder_givenOrderThatDoesNotExist_throwsException() {
         when(orderRepository.getRecordById(1)).thenReturn(order1);
         when(orderRepository.recordExists(1)).thenReturn(true);
-        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> orderService.getOrder(15)).withMessage("The order could not be found based on the provided order ID: 15.");
+        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> orderService.getOrder(15)).withMessage("The orders could not be found based on the provided orders ID: 15.");
     }
 
     @Test
@@ -78,7 +78,7 @@ public class OrderServiceUnitTest {
 
     @Test
     public void getAllOrdersForCustomer_happyPath() {
-        //        when(orderRepository.getFilteredRecords(order -> order.getCustomerId() == 1)).thenReturn(Arrays.asList(order1, order2, order3));
+        //        when(orderRepository.getFilteredRecords(orders -> orders.getCustomerId() == 1)).thenReturn(Arrays.asList(order1, order2, order3));
         when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2, order3));
         when(order1.getCustomerId()).thenReturn(1);
         when(order2.getCustomerId()).thenReturn(2);
@@ -92,7 +92,7 @@ public class OrderServiceUnitTest {
     public void createOrder_happyPath() {
         when(orderRepository.addRecord(order1)).thenReturn(order1);
         when(order1.getOrderItems()).thenReturn(Arrays.asList(itemGroup1));
-        assertThat(orderService.createOrder(order1)).isEqualTo(order1);
+        assertThat(orderService.addOrder(order1)).isEqualTo(order1);
         verify(itemService, times(1)).modifyStock(Arrays.asList(itemGroup1));
     }
 

@@ -1,10 +1,7 @@
 package be.llodavid.domain;
 
-import be.llodavid.domain.item.Item;
-import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.OrderoException;
 
-import javax.inject.Named;
 import java.util.*;
 import java.util.function.Function;
 import java.util.function.Predicate;
@@ -50,7 +47,7 @@ public class Repository<E extends RepositoryRecord> {
 
     private void verifyIfRecordAlreadyExists(E record) {
         if (recordAlreadyInRepository(record)) {
-            throw new OrderoException(String.format("The %s already exists in the database.", record.getClass().getSimpleName().toLowerCase()));
+            throw new OrderoException(String.format("This %s record already exists in the database.", record.getClass().getSimpleName().toLowerCase()));
         }
     }
 

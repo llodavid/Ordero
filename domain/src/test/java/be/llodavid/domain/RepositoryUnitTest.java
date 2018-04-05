@@ -1,8 +1,8 @@
 package be.llodavid.domain;
 
-import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.customer.CustomerData;
-import be.llodavid.domain.customer.Address;
+import be.llodavid.domain.customers.Customer;
+import be.llodavid.domain.customers.CustomerData;
+import be.llodavid.domain.customers.Address;
 import be.llodavid.util.exceptions.OrderoException;
 import org.junit.Before;
 import org.junit.Test;
@@ -80,7 +80,7 @@ public class RepositoryUnitTest {
         customerRepository.addRecord(customer1);
         assertThatExceptionOfType(OrderoException.class)
                 .isThrownBy(()->customerRepository.addRecord(customer1))
-                .withMessage("The customer already exists in the database.");
+                .withMessage("This customer record already exists in the database.");
     }
 
     @Test

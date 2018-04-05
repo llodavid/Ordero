@@ -1,10 +1,10 @@
 package be.llodavid.service;
 
 import be.llodavid.domain.Repository;
-import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.order.ItemGroup;
-import be.llodavid.domain.order.Order;
-import be.llodavid.domain.order.OrderData;
+import be.llodavid.domain.customers.Customer;
+import be.llodavid.domain.orders.ItemGroup;
+import be.llodavid.domain.orders.Order;
+import be.llodavid.domain.orders.OrderData;
 import be.llodavid.util.exceptions.UnknownResourceException;
 import org.springframework.beans.factory.annotation.Qualifier;
 
@@ -41,7 +41,7 @@ public class OrderService {
 
     public void verifyIfOrderExists(int orderID) {
         if (!orderRepository.recordExists(orderID)) {
-            throw new UnknownResourceException("order", "order ID: " + orderID);
+            throw new UnknownResourceException("orders", "orders ID: " + orderID);
         }
     }
 
@@ -52,13 +52,13 @@ public class OrderService {
     public List<Order> getAllOrdersForCustomer(int customerId) {
         customerService.verifyIfCustomerExists(customerId);
         //Todo: find a way to mock predicate for testing purposes.
-//        return orderRepository.getFilteredRecords(order -> order.getCustomerId() == customerId);
+//        return orderRepository.getFilteredRecords(orders -> orders.getCustomerId() == customerId);
         return orderRepository.getAllRecords().stream()
                 .filter(order -> order.getCustomerId() == customerId)
                 .collect(Collectors.toList());
     }
 
-    public Order createOrder(Order order) {
+    public Order addOrder(Order order) {
         itemService.modifyStock(order.getOrderItems());
         order.finishOrder(LocalDate.now());
         return orderRepository.addRecord(order);

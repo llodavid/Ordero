@@ -1,7 +1,7 @@
 package be.llodavid.service;
 
-import be.llodavid.domain.customer.Customer;
-import be.llodavid.domain.customer.CustomerData;
+import be.llodavid.domain.customers.Customer;
+import be.llodavid.domain.customers.CustomerData;
 import be.llodavid.domain.Repository;
 import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.UnknownResourceException;
@@ -31,7 +31,7 @@ public class CustomerService {
 
     public void verifyIfCustomerExists(int customerID) {
         if (!customerRepository.recordExists(customerID)) {
-            throw new UnknownResourceException("customer", "customer ID: " + customerID);
+            throw new UnknownResourceException("customers", "customers ID: " + customerID);
         }
     }
 
@@ -43,7 +43,7 @@ public class CustomerService {
 
     private void verifyEntryDoesNotExistYet(Customer customer) {
         if (customerRepository.recordAlreadyInRepository(customer)) {
-            throw new DoubleEntryException("customer", String.format("%s %s", customer.getFirstName(), customer.getLastName()));
+            throw new DoubleEntryException("customers", String.format("%s %s", customer.getFirstName(), customer.getLastName()));
         }
     }
 

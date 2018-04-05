@@ -1,10 +1,10 @@
 package be.llodavid.service;
 
-import be.llodavid.domain.item.Item;
-import be.llodavid.domain.item.ItemData;
+import be.llodavid.domain.items.Item;
+import be.llodavid.domain.items.ItemData;
 import be.llodavid.domain.Repository;
-import be.llodavid.domain.order.ItemGroup;
-import be.llodavid.domain.order.StockSupplyLevel;
+import be.llodavid.domain.orders.ItemGroup;
+import be.llodavid.domain.orders.StockSupplyLevel;
 import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.UnknownResourceException;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -45,13 +45,13 @@ public class ItemService {
 
     private void verifyIfItemExists(int itemId) {
         if (!itemRepository.recordExists(itemId)) {
-            throw new UnknownResourceException("item", "item ID: " + itemId);
+            throw new UnknownResourceException("items", "items ID: " + itemId);
         }
     }
 
     private void verifyItemDoesNotExistYet(Item item) {
         if (itemRepository.recordAlreadyInRepository(item)) {
-            throw new DoubleEntryException("item", String.format("%s", item.getName()));
+            throw new DoubleEntryException("items", String.format("%s", item.getName()));
         }
     }
 
