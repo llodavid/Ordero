@@ -57,7 +57,7 @@ public class OrderControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        clearAndFlushDatabases();
+        clearAndFlushTables();
         createItems();
         createCustomers();
 
@@ -144,7 +144,7 @@ public class OrderControllerIntegrationTest {
         customerRepository.saveAll((Arrays.asList(customer1,customer2)));
     }
 
-    public void clearAndFlushDatabases() {
+    public void clearAndFlushTables() {
         orderRepository.deleteAll();
         itemRepository.deleteAll();
         customerRepository.deleteAll();

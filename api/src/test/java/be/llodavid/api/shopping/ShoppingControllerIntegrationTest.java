@@ -68,7 +68,7 @@ public class ShoppingControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        clearAndFlushDatabases();
+        clearAndFlushTables();
 
         createItems();
         createCustomers();
@@ -167,7 +167,7 @@ public class ShoppingControllerIntegrationTest {
         shoppingService.clearShoppingCart(2);
     }
 
-    public void clearAndFlushDatabases() {
+    public void clearAndFlushTables() {
         orderRepository.deleteAll();
         itemRepository.deleteAll();
         customerRepository.deleteAll();
@@ -175,7 +175,6 @@ public class ShoppingControllerIntegrationTest {
         TestTransaction.end();
         TestTransaction.start();
     }
-
 
     @Test
     public void getShoppingCartContent_happyPath() {

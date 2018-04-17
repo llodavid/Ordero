@@ -44,7 +44,7 @@ public class ItemControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        clearAndFlushDatabases();
+        clearAndFlushTables();
         item = Item.ItemBuilder.buildItem()
                 .withName("Simple Chair with 1 paw")
                 .withDescription("extra paws cost extra")
@@ -73,7 +73,7 @@ public class ItemControllerIntegrationTest {
         itemDTO = itemMapper.itemToDTO(item);
     }
 
-    public void clearAndFlushDatabases() {
+    public void clearAndFlushTables() {
         itemRepository.deleteAll();
         TestTransaction.flagForCommit();
         TestTransaction.end();

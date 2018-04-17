@@ -41,7 +41,7 @@ public class CustomerControllerIntegrationTest {
 
     @BeforeEach
     public void setUp() throws Exception {
-        clearAndFlushDatabase();
+        clearAndFlushTables();
         TestTransaction.flagForCommit();
         TestTransaction.end();
         TestTransaction.start();
@@ -60,7 +60,7 @@ public class CustomerControllerIntegrationTest {
         customerDTO = customerMapper.customerToDTO(customer);
 
     }
-    public void clearAndFlushDatabase() {
+    public void clearAndFlushTables() {
         customerRepository.deleteAll();
     }
 
