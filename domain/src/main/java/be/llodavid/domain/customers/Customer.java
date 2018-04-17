@@ -4,15 +4,27 @@ import be.llodavid.domain.RepositoryRecord;
 import be.llodavid.util.exceptions.OrderoException;
 import be.llodavid.util.helperClasses.EmailValidation;
 
+import javax.persistence.*;
 import java.util.Objects;
 
-public class Customer implements RepositoryRecord {
+@Entity
+@Table(name="CUSTOMERS")
+public class Customer {
 
-    private int customerId;
+    @Id
+    @SequenceGenerator(name = "customers_generator", sequenceName = "customers_seq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "customers_generator")
+    @Column(name = "CUSTOMER_ID")
+    private long customerId;
+    @Column(name = "LASTNAME")
     private String lastName;
-    private String firstName;
+    @Column(name = "PHONE_NUMBER")
     private String phonenumber;
+    @Column(name = "FIRSTNAME")
+    private String firstName;
+    @Column(name = "EMAIL")
     private String email;
+    @Embedded
     private Address address;
 
     private Customer(CustomerBuilder customerBuilder) {
@@ -23,12 +35,13 @@ public class Customer implements RepositoryRecord {
         this.email = customerBuilder.email;
     }
 
-    @Override
-    public void setId(int valueId) {
-        this.customerId = valueId;
+    public Customer() {
     }
-    @Override
-    public int getId() {
+
+//    public void setId(int valueId) {
+//        this.customerId = valueId;
+//    }
+    public long getId() {
         return customerId;
     }
 
@@ -102,7 +115,7 @@ public class Customer implements RepositoryRecord {
         }
 
         private boolean isFilledIn(String field) {
-            return field != null && !field.trim().equals("");
+            return field != null && !field.isEmpty();
         }
 
         public CustomerBuilder withLastName(String lastName) {

@@ -1,47 +1,50 @@
 package be.llodavid.api.customers;
 
 import be.llodavid.api.TestApplication;
-import be.llodavid.domain.Repository;
-import be.llodavid.domain.customers.Customer;
 import be.llodavid.domain.customers.Address;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.context.embedded.LocalServerPort;
+import be.llodavid.domain.customers.Customer;
+import be.llodavid.domain.customers.CustomerRepository;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
+import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.test.context.junit4.SpringRunner;
-
-import javax.inject.Inject;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.springframework.test.context.transaction.TestTransaction;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Arrays;
 import java.util.List;
 
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
-@RunWith(SpringRunner.class)
+//@RunWith(JUnitPlatform.class)
 @SpringBootTest(classes = TestApplication.class, webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@ExtendWith(SpringExtension.class)
+@Transactional
 public class CustomerControllerIntegrationTest {
 
     @LocalServerPort
     private int port;
 
-    @Inject
-    @Qualifier("CustomerRepo")
-    private Repository<Customer> customerRepository;
-    @Inject
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
     private CustomerMapper customerMapper;
 
     private Customer customer;
     private CustomerDTO customerDTO;
-//    @Inject
-//    CustomerService customerService;
 
-    @Before
+    @BeforeEach
     public void setUp() throws Exception {
+        clearAndFlushDatabase();
+        TestTransaction.flagForCommit();
+        TestTransaction.end();
+        TestTransaction.start();
         customer = Customer.CustomerBuilder.buildCustomer()
                 .withFirstName("David")
                 .withLastName("From the Mountain")
@@ -55,10 +58,12 @@ public class CustomerControllerIntegrationTest {
                         .build())
                 .build();
         customerDTO = customerMapper.customerToDTO(customer);
-        customerRepository.addRecord(customer);
+
+    }
+    public void clearAndFlushDatabase() {
+        customerRepository.deleteAll();
     }
 
-    //TODO: discuss with Niels - first integration tests, are these OK?
     @Test
     public void createCustomer_happyPath() {
         CustomerDTO createdCustomer = new TestRestTemplate()
@@ -72,21 +77,24 @@ public class CustomerControllerIntegrationTest {
 
     @Test
     public void getCustomer_happyPath() {
+        CustomerDTO createdCustomer = new TestRestTemplate()
+                .postForObject(String.format("http://localhost:%s/%s", port, "customers"), customerDTO, CustomerDTO.class);
         ResponseEntity<CustomerDTO> response = new TestRestTemplate()
-                .getForEntity(String.format("http://localhost:%s/%s/%s", port, "customers",customer.getId()), CustomerDTO.class);
+                .getForEntity(String.format("http://localhost:%s/%s/%s", port, "customers",createdCustomer.customerId), CustomerDTO.class);
 
         CustomerDTO customerDTO2 = response.getBody();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         assertThat(customerDTO2).isNotNull();
-        assertThat(customerDTO2.customerId).isEqualTo(customer.getId());
-        assertThat(customerDTO2.firstName).isEqualTo("David");
-        assertThat(customerDTO2.lastName).isEqualTo("From the Mountain");
-        assertThat(customerDTO2.eMail).isEqualTo("david@hotmail.com");
+        assertThat(customerDTO2).isEqualTo(createdCustomer);
     }
 
     @Test
     public void getCustomers_happyPath() {
+        //customerRepository.save(customer);
+        CustomerDTO createdCustomer = new TestRestTemplate()
+                .postForObject(String.format("http://localhost:%s/%s", port, "customers"), customerDTO, CustomerDTO.class);
+
         ResponseEntity<CustomerDTO[]> response = new TestRestTemplate()
                 .getForEntity(String.format("http://localhost:%s/%s", port, "customers"), CustomerDTO[].class);
 
@@ -94,10 +102,7 @@ public class CustomerControllerIntegrationTest {
         assertThat(customerList).isNotNull();
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-        CustomerDTO customerDTO2 = customerList.get(customerList.size()-1);
-        assertThat(customerDTO2.customerId).isEqualTo(customerList.size());
-        assertThat(customerDTO2.firstName).isEqualTo("David");
-        assertThat(customerDTO2.lastName).isEqualTo("From the Mountain");
-        assertThat(customerDTO2.eMail).isEqualTo("david@hotmail.com");
+        assertThat(customerList).hasSize(1);
+        assertThat(customerList).contains(createdCustomer);
     }
 }

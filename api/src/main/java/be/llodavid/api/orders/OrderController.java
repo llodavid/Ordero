@@ -21,7 +21,6 @@ public class OrderController {
         this.orderService = orderService;
         this.orderMapper = orderMapper;
         // this.itemService = itemService;
-        orderService.injectDefaultData();
     }
 
     @GetMapping(produces = "application/json")

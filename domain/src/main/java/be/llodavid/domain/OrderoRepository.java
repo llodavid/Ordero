@@ -7,12 +7,12 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-public class Repository<E extends RepositoryRecord> {
+public class OrderoRepository<E extends RepositoryRecord> {
 
     private Map<Integer, E> repository;
     private int idCounter = 1;
 
-    public Repository() {
+    public OrderoRepository() {
         repository = new HashMap<>();
     }
 

@@ -18,14 +18,13 @@ public class CustomerController {
     public CustomerController(CustomerService customerService, CustomerMapper customerMapper) {
         this.customerService = customerService;
         this.customerMapper = customerMapper;
-        customerService.injectDefaultData();
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO addCustomer(@RequestBody CustomerDTO customer) {
         return customerMapper.customerToDTO(
-                customerService.addCustomer(
+                customerService.createCustomer(
                         customerMapper.dtoToCustomer(customer)));
     }
 

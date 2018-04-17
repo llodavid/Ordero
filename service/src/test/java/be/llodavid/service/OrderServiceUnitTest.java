@@ -1,39 +1,37 @@
 package be.llodavid.service;
 
-import be.llodavid.domain.Repository;
 import be.llodavid.domain.customers.Customer;
 import be.llodavid.domain.orders.ItemGroup;
 import be.llodavid.domain.orders.Order;
 import be.llodavid.domain.orders.OrderData;
+import be.llodavid.domain.orders.OrderRepository;
 import be.llodavid.util.exceptions.UnknownResourceException;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
-
-import static org.assertj.core.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.mock;
 
 public class OrderServiceUnitTest {
     private Order order1, order2, order3;
     private ItemGroup itemGroup1, itemGroup2, itemGroup3;
-    private Repository<Order> orderRepository;
+    private OrderRepository orderRepository;
     private OrderService orderService;
     private CustomerService customerService;
     private ItemService itemService;
     private OrderData orderData;
     private Customer customer, customer2;
 
-
     @Before
     public void setUp() throws Exception {
-        orderRepository = mock(Repository.class);
+        orderRepository = mock(OrderRepository.class);
         orderData = mock(OrderData.class);
         customerService = mock(CustomerService.class);
         itemService = mock(ItemService.class);
@@ -49,40 +47,36 @@ public class OrderServiceUnitTest {
         order3 = mock(Order.class);
     }
 
-    @Test
-    public void injectDefaultData_happyPath() {
-        when(orderData.getDefaultOrders()).thenReturn(new ArrayList<>());
-        orderService.injectDefaultData();
-        verify(orderRepository, times(1)).injectDefaultData(new OrderData().getDefaultOrders());
-    }
 
     @Test
     public void getOrder_happyPath() {
-        when(orderRepository.getRecordById(1)).thenReturn(order1);
-        when(orderRepository.recordExists(1)).thenReturn(true);
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order1));
+        when(orderRepository.existsById(1L)).thenReturn(true);
         assertThat(orderService.getOrder(1)).isEqualTo(order1);
     }
 
     @Test
     public void getOrder_givenOrderThatDoesNotExist_throwsException() {
-        when(orderRepository.getRecordById(1)).thenReturn(order1);
-        when(orderRepository.recordExists(1)).thenReturn(true);
-        assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(() -> orderService.getOrder(15)).withMessage("The orders could not be found based on the provided orders ID: 15.");
+        when(orderRepository.findById(1L)).thenReturn(Optional.of(order1));
+        when(orderRepository.existsById(1L)).thenReturn(true);
+        assertThatExceptionOfType(UnknownResourceException.class)
+                .isThrownBy(() -> orderService.getOrder(15))
+                .withMessage("The order could not be found based on the provided order ID: 15.");
     }
 
     @Test
     public void getAllOrders_happyPath() {
-        when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2));
+        when(orderRepository.findAll()).thenReturn(Arrays.asList(order1, order2));
         assertThat(orderService.getAllOrders()).isEqualTo(Arrays.asList(order1, order2));
     }
 
     @Test
     public void getAllOrdersForCustomer_happyPath() {
         //        when(orderRepository.getFilteredRecords(orders -> orders.getCustomerId() == 1)).thenReturn(Arrays.asList(order1, order2, order3));
-        when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2, order3));
-        when(order1.getCustomerId()).thenReturn(1);
-        when(order2.getCustomerId()).thenReturn(2);
-        when(order3.getCustomerId()).thenReturn(1);
+        when(orderRepository.findAll()).thenReturn(Arrays.asList(order1, order2, order3));
+        when(order1.getCustomerId()).thenReturn(1L);
+        when(order2.getCustomerId()).thenReturn(2L);
+        when(order3.getCustomerId()).thenReturn(1L);
 
         assertThat(orderService.getAllOrdersForCustomer(1)).containsOnly(order1, order3);
         verify(customerService, times(1)).verifyIfCustomerExists(1);
@@ -90,7 +84,7 @@ public class OrderServiceUnitTest {
 
     @Test
     public void createOrder_happyPath() {
-        when(orderRepository.addRecord(order1)).thenReturn(order1);
+        when(orderRepository.save(order1)).thenReturn(order1);
         when(order1.getOrderItems()).thenReturn(Arrays.asList(itemGroup1));
         assertThat(orderService.addOrder(order1)).isEqualTo(order1);
         verify(itemService, times(1)).modifyStock(Arrays.asList(itemGroup1));
@@ -98,18 +92,18 @@ public class OrderServiceUnitTest {
 
     @Test
     public void viewOrderItemsShippingToday() {
-        when(orderRepository.getAllRecords()).thenReturn(Arrays.asList(order1, order2));
+        when(orderRepository.findAll()).thenReturn(Arrays.asList(order1, order2));
         when(order1.getOrderItems()).thenReturn(Arrays.asList(itemGroup1, itemGroup2));
         when(order2.getOrderItems()).thenReturn(Arrays.asList(itemGroup1, itemGroup2, itemGroup3));
         when(itemGroup1.getShippingDate()).thenReturn(LocalDate.now());
         when(itemGroup2.getShippingDate()).thenReturn(LocalDate.now().minusDays(1));
         when(itemGroup3.getShippingDate()).thenReturn(LocalDate.now());
 
-        when(order1.getCustomerId()).thenReturn(1);
-        when(order2.getCustomerId()).thenReturn(2);
+        when(order1.getCustomerId()).thenReturn(1L);
+        when(order2.getCustomerId()).thenReturn(2L);
 
-        when(customerService.getCustomer(1)).thenReturn(customer);
-        when(customerService.getCustomer(2)).thenReturn(customer2);
+        when(customerService.getCustomer(1L)).thenReturn(customer);
+        when(customerService.getCustomer(2L)).thenReturn(customer2);
 
         Map<Customer, List<ItemGroup>> ordersShippingToday = orderService.viewOrderItemsShippingToday();
 

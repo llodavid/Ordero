@@ -2,56 +2,54 @@ package be.llodavid.service;
 
 import be.llodavid.domain.customers.Customer;
 import be.llodavid.domain.customers.CustomerData;
-import be.llodavid.domain.Repository;
+import be.llodavid.domain.OrderoRepository;
+import be.llodavid.domain.customers.CustomerRepository;
 import be.llodavid.util.exceptions.DoubleEntryException;
 import be.llodavid.util.exceptions.UnknownResourceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-@Named
+@Service
+@Transactional
 public class CustomerService {
-    private Repository<Customer> customerRepository;
+    private CustomerRepository customerRepository;
 
-    @Inject
-    public CustomerService(@Qualifier("CustomerRepo")Repository<Customer> customerRepository) {
+    @Autowired
+    public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
     }
 
-    public void injectDefaultData() {
-        customerRepository.injectDefaultData(new CustomerData().getDefaultCustomers());
-    }
-
-    public Customer getCustomer(int customerID) throws UnknownResourceException {
+    public Customer getCustomer(long customerID) throws UnknownResourceException {
         verifyIfCustomerExists(customerID);
-        return customerRepository.getRecordById(customerID);
+        return customerRepository.findById(customerID).get();
     }
 
-    public void verifyIfCustomerExists(int customerID) {
-        if (!customerRepository.recordExists(customerID)) {
+    public void verifyIfCustomerExists(long customerID) {
+        if (!customerRepository.existsById(customerID)) {
             throw new UnknownResourceException("customers", "customers ID: " + customerID);
         }
     }
 
-    public Customer addCustomer(Customer customer) {
-        verifyEntryDoesNotExistYet(customer);
-        return customerRepository.addRecord(customer);
-
+    public Customer createCustomer(Customer customer) {
+        return customerRepository.save(customer);
     }
 
     private void verifyEntryDoesNotExistYet(Customer customer) {
-        if (customerRepository.recordAlreadyInRepository(customer)) {
+        if (customerRepository.existsById(customer.getId())) {
             throw new DoubleEntryException("customers", String.format("%s %s", customer.getFirstName(), customer.getLastName()));
         }
     }
-
     public List<Customer> getAllCustomers() {
-        return customerRepository.getAllRecords();
-    }
-
-    public boolean customerExists(int customerId) {
-        return customerRepository.recordExists(customerId);
+        return StreamSupport.stream(customerRepository.findAll().spliterator(),false)
+                .collect(Collectors.toList());
     }
 }

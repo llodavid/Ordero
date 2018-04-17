@@ -19,7 +19,6 @@ public class ItemController {
     public ItemController(ItemService itemService, ItemMapper itemMapper) {
         this.itemService = itemService;
         this.itemMapper = itemMapper;
-        itemService.injectDefaultData();
     }
 
     @PostMapping(consumes = "application/json", produces = "application/json")
@@ -56,9 +55,9 @@ public class ItemController {
 
     @PutMapping(path = "/{itemId}", consumes = "application/json", produces = "application/json")
     @ResponseStatus(HttpStatus.OK)
-    public ItemDTO updateItem(@PathVariable int itemId, @RequestBody ItemDTO item) {
+    public ItemDTO updateItem(@PathVariable long itemId, @RequestBody ItemDTO item) {
         return itemMapper.itemToDTO(
                 itemService.updateItem(
-                        itemMapper.dtoToItem(item), itemId));
+                        itemMapper.dtoToUpdatedItem(item,itemId)));
     }
 }

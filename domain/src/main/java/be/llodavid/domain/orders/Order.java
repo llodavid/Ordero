@@ -3,25 +3,44 @@ package be.llodavid.domain.orders;
 import be.llodavid.domain.RepositoryRecord;
 import be.llodavid.util.exceptions.OrderoException;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
-public class Order implements RepositoryRecord {
-
-    private int orderId;
-    private int customerId;
+@Entity
+@Table(name="ORDERS")
+public class Order {
+    @Id
+    @SequenceGenerator(name = "order_generator", sequenceName = "order_seq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "order_generator")
+    @Column(name = "ORDER_ID")
+    private long orderId;
+    @Column(name = "FK_CUSTOMER_ID")
+    private long customerId;
+    @Column(name = "ORDERSTATUS")
     private OrderStatus orderStatus;
+    @Column(name = "ORDERDATE")
     private LocalDate orderDate;
+
+    @OneToMany (cascade = {CascadeType.ALL, CascadeType.REMOVE})
+    //@Cascade(org.hibernate.annotations.CascadeType.SAVE_UPDATE)
+    @JoinColumn(name="FK_ORDER_ID", nullable=false)
     private List<ItemGroup> orderItems;
 
-    public Order(int customerId, List<ItemGroup> orderItems) {
+    public Order(long customerId, List<ItemGroup> orderItems) {
         this.customerId = customerId;
         verifyIfAtLeastOneItemGroup(orderItems);
         this.orderItems = orderItems;
         orderStatus = OrderStatus.CREATED;
+    }
+    public void addItemGroup(ItemGroup itemGroup) {
+        this.orderItems.add(itemGroup);
+    }
+
+    public Order() {
     }
 
     private void verifyIfAtLeastOneItemGroup(List<ItemGroup> orderItems) {
@@ -55,12 +74,11 @@ public class Order implements RepositoryRecord {
     private void setShippingDate(LocalDate orderDate) {
         orderItems.forEach(itemGroup -> itemGroup.calculateShippingDate(orderDate));
     }
-    @Override
-    public int getId() {
+    public long getId() {
         return orderId;
     }
 
-    public int getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
 
@@ -84,8 +102,7 @@ public class Order implements RepositoryRecord {
         this.orderDate = orderDate;
     }
 
-    @Override
-    public void setId(int valueId) {
+    public void setId(long valueId) {
         this.orderId = valueId;
     }
 

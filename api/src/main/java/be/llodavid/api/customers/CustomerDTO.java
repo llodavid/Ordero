@@ -3,9 +3,11 @@ package be.llodavid.api.customers;
 import be.llodavid.domain.customers.Address;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
+import java.util.Objects;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CustomerDTO {
-    public int customerId;
+    public long customerId;
     public String lastName;
     public String firstName;
     public String phonenumber;
@@ -16,7 +18,7 @@ public class CustomerDTO {
     public String city;
     public String country;
 
-    public CustomerDTO withCustomerId(int customerId) {
+    public CustomerDTO withCustomerId(long customerId) {
         this.customerId = customerId;
         return this;
     }
@@ -58,5 +60,28 @@ public class CustomerDTO {
                 .withCity(city)
                 .withCountry(country)
                 .build();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CustomerDTO that = (CustomerDTO) o;
+        return customerId == that.customerId &&
+                Objects.equals(lastName, that.lastName) &&
+                Objects.equals(firstName, that.firstName) &&
+                Objects.equals(phonenumber, that.phonenumber) &&
+                Objects.equals(eMail, that.eMail) &&
+                Objects.equals(street, that.street) &&
+                Objects.equals(housenumber, that.housenumber) &&
+                Objects.equals(zipcode, that.zipcode) &&
+                Objects.equals(city, that.city) &&
+                Objects.equals(country, that.country);
+    }
+
+    @Override
+    public int hashCode() {
+
+        return Objects.hash(customerId, lastName, firstName, phonenumber, eMail, street, housenumber, zipcode, city, country);
     }
 }

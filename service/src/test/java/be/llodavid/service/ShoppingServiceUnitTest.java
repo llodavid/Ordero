@@ -1,8 +1,9 @@
 package be.llodavid.service;
 
-import be.llodavid.domain.Repository;
+import be.llodavid.domain.OrderoRepository;
 import be.llodavid.domain.orders.ItemGroup;
 import be.llodavid.domain.orders.Order;
+import be.llodavid.domain.orders.OrderRepository;
 import be.llodavid.domain.orders.ShoppingCart;
 import be.llodavid.util.exceptions.OrderoException;
 import be.llodavid.util.exceptions.UnknownResourceException;
@@ -25,7 +26,7 @@ public class ShoppingServiceUnitTest {
     private Order order;
     private ItemService itemService;
     private CustomerService customerService;
-    private Repository<Order> orderRepository;
+    private OrderRepository orderRepository;
 
     @Before
     public void setUp() throws Exception {
@@ -36,7 +37,7 @@ public class ShoppingServiceUnitTest {
         itemService = mock(ItemService.class);
         customerService = mock(CustomerService.class);
         orderService = mock(OrderService.class);
-        orderRepository = mock(Repository.class);
+        orderRepository = mock(OrderRepository.class);
         order = mock(Order.class);
         shoppingService = new ShoppingService(orderService, customerService, itemService);
     }
@@ -53,27 +54,27 @@ public class ShoppingServiceUnitTest {
 
     @Test
     public void createOrderFromShoppingCart_givenCustomerWithShoppingCart_createsOrder() {
-        when(customerService.customerExists(1)).thenReturn(true);
+        //when(customerService.verifyIfCustomerExists(1L)).thenReturn(true);
         shoppingService.addItemToShoppingCart(itemGroup1, 1);
         shoppingService.addItemToShoppingCart(itemGroup2, 1);
-        when(orderService.addOrder(new Order(1,Arrays.asList(itemGroup1,itemGroup2)))).thenReturn(order);
+        when(orderService.addOrder(new Order(1, Arrays.asList(itemGroup1, itemGroup2)))).thenReturn(order);
         assertThat(shoppingService.createOrderFromShoppingCart(1)).isEqualTo(order);
     }
 
     @Test
     public void createOrderFromShoppingCart_givenCustomerWithoutShoppingCart_throwsException() {
         assertThatExceptionOfType(UnknownResourceException.class).isThrownBy(
-                () ->shoppingService.createOrderFromShoppingCart(1))
-        .withMessage("The shopping cart could not be found based on the provided customerID 1.");
+                () -> shoppingService.createOrderFromShoppingCart(1))
+                .withMessage("The shopping cart could not be found based on the provided customerID 1.");
     }
 
 
     @Test
     public void getShoppingCartContent_givenCustomerWithShoppingCart_returnsShoppingCart() {
-        when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
-        shoppingService.addItemToShoppingCart(itemGroup1, 1);
-        assertThat(shoppingService.getShoppingCartContent(1)).containsExactly(itemGroup1);
-        assertThat(shoppingService.getShoppingCartContent(1).size()).isEqualTo(1);
+        when(itemService.createItemGroup(1L, 1)).thenReturn(itemGroup1);
+        shoppingService.addItemToShoppingCart(itemGroup1, 1L);
+        assertThat(shoppingService.getShoppingCartContent(1L)).containsExactly(itemGroup1);
+        assertThat(shoppingService.getShoppingCartContent(1L).size()).isEqualTo(1);
     }
 
     @Test
@@ -93,7 +94,7 @@ public class ShoppingServiceUnitTest {
     //not really a unit tests as it uses shoppingCart.
     @Test
     public void getShoppingCart_givenCustomerAndItem_returnsCustomerShoppingCart() {
-        when(customerService.customerExists(1)).thenReturn(true);
+        //when(customerService.customerExists(1)).thenReturn(true);
         when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
 
         shoppingService.addItemToShoppingCart(itemGroup1, 1);
@@ -106,25 +107,26 @@ public class ShoppingServiceUnitTest {
     @Test
     public void reOrder_happyPath() {
         when(orderService.getOrder(1)).thenReturn(order);
-        when(order.getCustomerId()).thenReturn(1);
-        when(itemGroup1.getItemId()).thenReturn(1);
+        when(order.getCustomerId()).thenReturn(1L);
+        when(itemGroup1.getItemId()).thenReturn(1L);
         when(order.getOrderItems()).thenReturn(Collections.singletonList(itemGroup1));
-        when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
+        when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
         when(orderService.addOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
 
-        assertThat(shoppingService.reOrder(1,1)).isEqualTo(order);
+        assertThat(shoppingService.reOrder(1, 1)).isEqualTo(order);
     }
+
     @Test
     public void reOrder_orderNotOfCustomer_throwsException() {
         when(orderService.getOrder(1)).thenReturn(order);
-        when(order.getCustomerId()).thenReturn(2);
-        when(itemGroup1.getItemId()).thenReturn(1);
+        when(order.getCustomerId()).thenReturn(2L);
+        when(itemGroup1.getItemId()).thenReturn(1L);
         when(order.getOrderItems()).thenReturn(Collections.singletonList(itemGroup1));
-        when(itemService.createItemGroup(1,1)).thenReturn(itemGroup1);
+        when(itemService.createItemGroup(1, 1)).thenReturn(itemGroup1);
         when(orderService.addOrder(new Order(1, Collections.singletonList(itemGroup1)))).thenReturn(order);
 
         assertThatExceptionOfType(OrderoException.class).isThrownBy(
-                ()->shoppingService.reOrder(1,1))
-                .withMessage("A customers can only re-orders one of their own orders");
+                () -> shoppingService.reOrder(1, 1))
+                .withMessage("A customer can only re-orders one of their own orders");
     }
 }

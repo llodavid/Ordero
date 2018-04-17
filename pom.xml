@@ -7,24 +7,26 @@
     <groupId>be.llodavid</groupId>
     <artifactId>ordero</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.1-SNAPSHOT</version>
     <modules>
         <module>domain</module>
         <module>api</module>
         <module>service</module>
         <module>orderoApp</module>
         <module>util</module>
+        <module>configuration</module>
     </modules>
 
     <properties>
         <maven.compiler.target>1.8</maven.compiler.target>
         <maven.compiler.source>1.8</maven.compiler.source>
-        <spring.starterversion>1.5.9.RELEASE</spring.starterversion>
+        <spring.starterversion>2.0.0.RELEASE</spring.starterversion>
+        <hibernate.version>5.2.16.Final</hibernate.version>
     </properties>
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.9.RELEASE</version>
+        <version>2.0.0.RELEASE</version>
     </parent>
 
     <dependencyManagement>
@@ -51,6 +53,12 @@
             <dependency>
                 <groupId>be.llodavid</groupId>
                 <artifactId>util</artifactId>
+                <version>${project.version}</version>
+            </dependency>
+
+            <dependency>
+                <groupId>be.llodavid</groupId>
+                <artifactId>configuration</artifactId>
                 <version>${project.version}</version>
             </dependency>
 
@@ -89,12 +97,12 @@
 
     <dependencies>
 
-        <dependency>
-            <groupId>org.mockito</groupId>
-            <artifactId>mockito-core</artifactId>
-            <version>2.13.0</version>
-            <scope>test</scope>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>org.mockito</groupId>-->
+            <!--<artifactId>mockito-core</artifactId>-->
+            <!--<version>2.13.0</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>javax.inject</groupId>
@@ -123,18 +131,30 @@
             <scope>test</scope>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>org.assertj</groupId>-->
+            <!--<artifactId>assertj-core</artifactId>-->
+            <!--<version>3.9.1</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.junit.vintage</groupId>-->
+            <!--<artifactId>junit-vintage-engine</artifactId>-->
+            <!--<version>5.1.0</version>-->
+            <!--<scope>test</scope>-->
+        <!--</dependency>-->
+
         <dependency>
-            <groupId>org.assertj</groupId>
-            <artifactId>assertj-core</artifactId>
-            <version>3.9.1</version>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-runner</artifactId>
+            <version>1.1.1</version>
             <scope>test</scope>
         </dependency>
 
         <dependency>
-            <groupId>org.junit.vintage</groupId>
-            <artifactId>junit-vintage-engine</artifactId>
-            <version>5.1.0</version>
-            <scope>test</scope>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
 
         <dependency>
@@ -144,6 +164,72 @@
             <scope>test</scope>
         </dependency>
 
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.data</groupId>-->
+            <!--<artifactId>spring-data-jpa</artifactId>-->
+            <!--<version>${spring.starterversion}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-jdbc</artifactId>-->
+            <!--<version>${spring.version}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-context</artifactId>-->
+            <!--<version>${spring.version}</version>-->
+        <!--</dependency>-->
+
+        <!--<dependency>-->
+            <!--<groupId>org.springframework</groupId>-->
+            <!--<artifactId>spring-orm</artifactId>-->
+            <!--<version>${spring.version}</version>-->
+        <!--</dependency>-->
+
+
+        <!-- https://mvnrepository.com/artifact/org.springframework.data/spring-data-commons -->
+        <!--<dependency>-->
+            <!--<groupId>org.springframework.data</groupId>-->
+            <!--<artifactId>spring-data-commons</artifactId>-->
+            <!--<version>${spring.starterversion}</version>-->
+        <!--</dependency>-->
+
+
+        <dependency>
+            <groupId>com.oracle</groupId>
+            <artifactId>ojdbc8</artifactId>
+            <version>12.2.0.1</version>
+        </dependency>
+
     </dependencies>
+
+    <repositories>
+
+        <repository>
+            <id>spring-libs-release</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/libs-release</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+
+        <repository>
+            <id>org.jboss.repository.releases</id>
+            <name>JBoss Maven Release Repository</name>
+            <url>https://repository.jboss.org/nexus/content/repositories/releases</url>
+        </repository>
+
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>spring-releases</id>
+            <name>Spring Releases</name>
+            <url>https://repo.spring.io/libs-release</url>
+        </pluginRepository>
+    </pluginRepositories>
 
 </project>

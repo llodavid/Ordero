@@ -43,7 +43,7 @@ public class ShoppingCartUnitTest {
         shoppingCart.addItem(itemGroup1);
         shoppingCart.addItem(itemGroup2);
 
-        Mockito.when(order.getCustomerId()).thenReturn(1);
+        Mockito.when(order.getCustomerId()).thenReturn(1L);
         Mockito.when(order.getOrderItems()).thenReturn(Arrays.asList(itemGroup1, itemGroup2));
         Mockito.when(order.getOrderStatus()).thenReturn(CREATED);
 

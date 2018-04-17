@@ -10,20 +10,20 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class OrderDTO {
-    public int orderId;
-    public int customerId;
+    public long orderId;
+    public long customerId;
     public OrderStatus orderStatus;
     //@JsonFormat(pattern = "dd::MM::yyyy")
     public String orderDate;
     public List<ItemGroupDTO> orderItems;
     public BigDecimal totalAmount;
 
-    public OrderDTO withOrderId(int orderId) {
+    public OrderDTO withOrderId(long orderId) {
         this.orderId = orderId;
         return this;
     }
 
-    public OrderDTO withCustomerId(int customerId) {
+    public OrderDTO withCustomerId(long customerId) {
         this.customerId = customerId;
         return this;
     }

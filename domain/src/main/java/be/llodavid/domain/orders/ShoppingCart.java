@@ -8,10 +8,10 @@ import java.util.Objects;
 
 public class ShoppingCart {
 
-    private int customerId;
+    private long customerId;
     private List<ItemGroup> orderItems;
 
-    public ShoppingCart(int customerId) {
+    public ShoppingCart(long customerId) {
         this.customerId = customerId;
         orderItems=new ArrayList<>();
     }
@@ -35,7 +35,7 @@ public class ShoppingCart {
                         (orderTotal, itemGroupTotal)-> orderTotal.add(itemGroupTotal));
     }
 
-    public int getCustomerId() {
+    public long getCustomerId() {
         return customerId;
     }
 

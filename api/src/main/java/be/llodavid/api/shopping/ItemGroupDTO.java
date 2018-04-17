@@ -7,14 +7,14 @@ import java.util.Objects;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class ItemGroupDTO {
-    public int itemId;
+    public long itemId;
     public String name;
     public String description;
     public BigDecimal price, itemGroupTotal;
     public int amount, shippingDays;
     public String shippingDate;
 
-    public ItemGroupDTO withItemId(int itemId) {
+    public ItemGroupDTO withItemId(long itemId) {
         this.itemId = itemId;
         return this;
     }
@@ -60,7 +60,6 @@ public class ItemGroupDTO {
         ItemGroupDTO that = (ItemGroupDTO) o;
         return itemId == that.itemId &&
                 amount == that.amount &&
-                shippingDays == that.shippingDays &&
                 Objects.equals(price, that.price) &&
                 Objects.equals(itemGroupTotal, that.itemGroupTotal) &&
                 Objects.equals(shippingDate, that.shippingDate);

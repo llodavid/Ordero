@@ -3,23 +3,39 @@ package be.llodavid.domain.orders;
 import be.llodavid.domain.items.Item;
 import be.llodavid.util.exceptions.OrderoException;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Objects;
 
 import static java.math.BigDecimal.*;
 
+@Entity
+@Table(name="ITEMGROUPS")
 public class ItemGroup {
-    private int itemId;
+
+    @Id
+    @SequenceGenerator(name = "Itemgroup_generator", sequenceName = "ITEMGROUP_SEQ", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "Itemgroup_generator")
+    @Column(name = "ITEMGROUP_ID")
+    private long itemGroupId;
+    @Column(name = "FK_ITEM_ID")
+    private long itemId;
+    @Column(name = "ITEM_GROUP_NAME")
     private String name;
+    @Column(name = "DESCRIPTION")
     private String description;
+    @Column(name = "PRICE")
     private BigDecimal price;
-    private int amount, shippingDays;
+    @Column(name = "AMOUNT")
+    private int amount;
+    @Transient
+    private int shippingDays;
+    @Column(name = "SHIPPINGDATE")
     private LocalDate shippingDate;
     private static final int NEXT_DAY_DELIVERY = 1;
     private static final int NEXT_WEEK_DELIVERY = 7;
 
-    //Todo: ask Niels: should I Just create a new Item object that copies the content of old Item and use it in this class or is it more clear this way?
     public ItemGroup(Item item, int amount) {
         this.itemId = item.getId();
         this.name = item.getName();
@@ -29,6 +45,9 @@ public class ItemGroup {
         this.amount = amount;
         verifyAmountIsPositive(amount);
         this.shippingDays = calculateShippingDaysBasedOnStock(item.getStock());
+    }
+
+    private ItemGroup() {
     }
 
     private void verifyPriceIsPositive(BigDecimal price) {
@@ -55,7 +74,11 @@ public class ItemGroup {
         return price.multiply(new BigDecimal(amount));
     }
 
-    public int getItemId() {
+    public long getItemGroupId() {
+        return itemGroupId;
+    }
+
+    public long getItemId() {
         return itemId;
     }
 

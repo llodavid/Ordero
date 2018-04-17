@@ -36,14 +36,14 @@ public class ShoppingController {
                 .collect(Collectors.toList());
     }
 
-    @PostMapping(path = "shoppingcart/{customerId}", consumes = "application/json", produces = "application/json")
+    @PostMapping(path = "shoppingcart/{customerId}", produces = "application/json")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO createOrderFromShoppingCart(@PathVariable int customerId) {
         return orderMapper.orderToDTO(
                 shoppingService.createOrderFromShoppingCart(customerId));
     }
 
-    @PostMapping(path = "customers/{customerId}/reorder/{orderId}", consumes = "application/json")
+    @PostMapping(path = "customers/{customerId}/reorder/{orderId}")
     @ResponseStatus(HttpStatus.CREATED)
     public OrderDTO reOrder(@PathVariable int customerId, @PathVariable int orderId) {
         return orderMapper.orderToDTO(

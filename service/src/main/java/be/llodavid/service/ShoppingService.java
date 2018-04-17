@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Named
 public class ShoppingService {
-    private Map<Integer, ShoppingCart> shoppingCarts;
+    private Map<Long, ShoppingCart> shoppingCarts;
     private OrderService orderService;
     private CustomerService customerService;
     private ItemService itemService;
@@ -27,27 +27,27 @@ public class ShoppingService {
         this.itemService = itemService;
     }
 
-    public ItemGroup addItemToShoppingCart(ItemGroup itemGroup, int customerId) {
+    public ItemGroup addItemToShoppingCart(ItemGroup itemGroup, long customerId) {
         ShoppingCart shoppingCart = getCustomerShoppingCartOrCreateNew(customerId);
         shoppingCart.addItem(itemGroup);
         shoppingCarts.put(customerId, shoppingCart);
         return itemGroup;
     }
 
-    private ShoppingCart getCustomerShoppingCartOrCreateNew(int customerId) {
+    private ShoppingCart getCustomerShoppingCartOrCreateNew(long customerId) {
         return shoppingCarts.containsKey(customerId) ?
                 shoppingCarts.get(customerId) :
                 new ShoppingCart(customerId);
     }
 
-    private void verifyIfCustomerHasShoppingCart(int customerId) {
+    private void verifyIfCustomerHasShoppingCart(long customerId) {
         if (shoppingCartIsEmpty(customerId)) {
             throw new UnknownResourceException("shopping cart",
                     String.format("customerID %s", String.valueOf(customerId)));
         }
     }
 
-    public Order createOrderFromShoppingCart(int customerId) {
+    public Order createOrderFromShoppingCart(long customerId) {
         customerService.verifyIfCustomerExists(customerId);
         verifyIfCustomerHasShoppingCart(customerId);
         Order order = orderService.addOrder(
@@ -56,21 +56,21 @@ public class ShoppingService {
         return order;
     }
 
-    public List<ItemGroup> getShoppingCartContent(int customerId) {
+    public List<ItemGroup> getShoppingCartContent(long customerId) {
         return shoppingCartIsEmpty(customerId) ?
                 new ArrayList<>() :
                 shoppingCarts.get(customerId).getShoppingCartContent();
     }
 
-    private boolean shoppingCartIsEmpty(int customerId) {
+    private boolean shoppingCartIsEmpty(long customerId) {
         return !shoppingCarts.containsKey(customerId);
     }
 
-    public void clearShoppingCart(int customerId) {
+    public void clearShoppingCart(long customerId) {
         shoppingCarts.remove(customerId);
     }
 
-    public Order reOrder(int customerId, int orderId) {
+    public Order reOrder(long customerId, int orderId) {
         return orderService.addOrder(
                 new Order(customerId,
                         refreshItemData(retrieveCustomerOrder(customerId, orderId))));
@@ -83,25 +83,24 @@ public class ShoppingService {
                 .collect(Collectors.toList());
     }
 
-    private Order retrieveCustomerOrder(int customerId, int orderId) {
+    private Order retrieveCustomerOrder(long customerId, int orderId) {
         Order oldOrder = orderService.getOrder(orderId);
         validateReorder(customerId, oldOrder);
         return oldOrder;
     }
 
-    private void validateReorder(int customerId, Order oldOrder) {
+    private void validateReorder(long customerId, Order oldOrder) {
         customerService.verifyIfCustomerExists(customerId);
-        orderService.verifyIfOrderExists(oldOrder.getId());
         verifyIfOrderIsOfCustomer(customerId, oldOrder.getCustomerId());
     }
 
-    private void verifyIfOrderIsOfCustomer(int customerId, int orderCustomerId) {
+    private void verifyIfOrderIsOfCustomer(long customerId, long orderCustomerId) {
         if (orderCustomerId != customerId) {
-            throw new OrderoException("A customers can only re-orders one of their own orders");
+            throw new OrderoException("A customer can only re-orders one of their own orders");
         }
     }
 
-    public ShoppingCart getShoppingCart(int customerId) {
+    public ShoppingCart getShoppingCart(long customerId) {
         customerService.verifyIfCustomerExists(customerId);
         return shoppingCarts.get(customerId);
     }

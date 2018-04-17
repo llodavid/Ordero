@@ -1,59 +1,56 @@
 package be.llodavid.service;
 
-import be.llodavid.domain.Repository;
+import be.llodavid.domain.OrderoRepository;
 import be.llodavid.domain.customers.Customer;
 import be.llodavid.domain.orders.ItemGroup;
 import be.llodavid.domain.orders.Order;
 import be.llodavid.domain.orders.OrderData;
+import be.llodavid.domain.orders.OrderRepository;
 import be.llodavid.util.exceptions.UnknownResourceException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Service;
 
 import javax.inject.Inject;
 import javax.inject.Named;
+import javax.transaction.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
-@Named
+@Service
+@Transactional
 public class OrderService {
-    private Repository<Order> orderRepository;
+    private OrderRepository orderRepository;
     private CustomerService customerService;
     private ItemService itemService;
 
-    @Inject
-    public OrderService(@Qualifier("OrderRepo") Repository<Order> orderRepository, CustomerService customerService, ItemService itemService) {
+    @Autowired
+    public OrderService(OrderRepository orderRepository, CustomerService customerService, ItemService itemService) {
         this.orderRepository = orderRepository;
         this.customerService = customerService;
         this.itemService = itemService;
     }
 
-    public void injectDefaultData() {
-        orderRepository.injectDefaultData(new OrderData().getDefaultOrders());
+    public Order getOrder(long orderID) throws UnknownResourceException {
+        return orderRepository.findById(orderID)
+                .orElseThrow(()-> new UnknownResourceException("order", "order ID: " + orderID));
     }
 
-    public Order getOrder(int orderID) throws UnknownResourceException {
-        verifyIfOrderExists(orderID);
-        return orderRepository.getRecordById(orderID);
-    }
-
-    public void verifyIfOrderExists(int orderID) {
-        if (!orderRepository.recordExists(orderID)) {
-            throw new UnknownResourceException("orders", "orders ID: " + orderID);
-        }
-    }
 
     public List<Order> getAllOrders() {
-        return orderRepository.getAllRecords();
+        return StreamSupport.stream(orderRepository.findAll().spliterator(),false)
+                .collect(Collectors.toList());
     }
 
     public List<Order> getAllOrdersForCustomer(int customerId) {
         customerService.verifyIfCustomerExists(customerId);
-        //Todo: find a way to mock predicate for testing purposes.
 //        return orderRepository.getFilteredRecords(orders -> orders.getCustomerId() == customerId);
-        return orderRepository.getAllRecords().stream()
+        return getAllOrders().stream()
                 .filter(order -> order.getCustomerId() == customerId)
                 .collect(Collectors.toList());
     }
@@ -61,11 +58,12 @@ public class OrderService {
     public Order addOrder(Order order) {
         itemService.modifyStock(order.getOrderItems());
         order.finishOrder(LocalDate.now());
-        return orderRepository.addRecord(order);
+        return orderRepository.save(order);
     }
 
     public Map<Customer, List<ItemGroup>> viewOrderItemsShippingToday() {
-        return orderRepository.getAllRecords().stream()
+        //TODO write a simple query for this.
+        return getAllOrders().stream()
                 .filter(order -> isOneOfTheItemGroupsShippingToday(order))
                 .collect(Collectors.toMap(
                         order -> getCustomer(order),

@@ -4,7 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class CartItemDTO {
-    public int customerId;
+    public long customerId;
     public int amount;
-    public int itemId;
+    public long itemId;
 }

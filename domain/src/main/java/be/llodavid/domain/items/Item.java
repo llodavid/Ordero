@@ -3,17 +3,34 @@ package be.llodavid.domain.items;
 import be.llodavid.domain.RepositoryRecord;
 import be.llodavid.util.exceptions.OrderoException;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 import java.util.Objects;
 
 import static java.math.BigDecimal.ZERO;
 
-public class Item implements RepositoryRecord {
-    private int itemId;
+@Entity
+@Table (name="ITEMS")
+public class Item {
+
+    @Id
+    @SequenceGenerator(name = "items_generator", sequenceName = "items_seq", initialValue = 1, allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "items_generator")
+    @Column(name = "ITEM_ID")
+    private long itemId;
+    @Column(name = "ITEM_NAME")
     private String name;
+    @Column(name = "DESCRIPTION")
     private String description;
+    @Column(name = "PRICE")
     private BigDecimal price;
-    private int stock, backOrderedItems;
+    @Column(name="STOCK")
+    private int stock;
+    @Column(name="BACKORDERED_ITEMS")
+    private int backOrderedItems;
+
+    private Item() {
+    }
 
     private Item(ItemBuilder itemBuilder) {
         this.name = itemBuilder.name;
@@ -36,13 +53,11 @@ public class Item implements RepositoryRecord {
         }
     }
 
-    @Override
-    public void setId(int valueId) {
+    public void setId(long valueId) {
         this.itemId = valueId;
     }
 
-    @Override
-    public int getId() {
+    public long getId() {
         return itemId;
     }
 

@@ -2,6 +2,9 @@ package be.llodavid.domain.customers;
 
 import be.llodavid.util.exceptions.OrderoException;
 
+import javax.persistence.Embeddable;
+
+@Embeddable
 public class Address {
     private String street;
     private String housenumber;
@@ -15,6 +18,9 @@ public class Address {
         this.zipcode = adressBuilder.zipcode;
         this.city = adressBuilder.city;
         this.country = adressBuilder.country;
+    }
+
+    public Address() {
     }
 
     public String getStreet() {
